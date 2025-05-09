@@ -6,10 +6,139 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  fName    String
+  lName    String
+  email    String @unique
+  phoneNum String
+  address  String
+  password String
+  role    UserRole
+  status UserStatus @default(PENDING)
+}
+
+enum UserRole {
+  MAIL_DELIVERER
+  POSTALCLERK
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+}
+
+model RoutingArea {
+  id         Int    @id @default(autoincrement())
+  homeNumber String
+  address    String
+
+  Mail Mail[]
+}
+
+model Customer {
+  id         Int    @id @default(autoincrement())
+  fName      String
+  lName      String
+  contactNum String
+  address    String
+  email      String @unique
+
+  Bill Bill[]
+
+  Mail Mail[]
+}
+
+model Inventory {
+  id            Int         @id @default(autoincrement())
+  itemName      String
+  quantity      Int
+  stockStatus   StockStatus
+  lastOrderDate DateTime
+}
+
+enum StockStatus {
+  IN_STOCK
+  OUT_STOCK
+}
+
+model Report {
+  id         Int        @id @default(autoincrement())
+  reportType ReportType
+  Date       DateTime
+}
+
+enum ReportType {
+  INVENTORY
+  MAIL
+}
+
+model Mail {
+  id              Int      @id @default(autoincrement())
+  senderName      String
+  senderAddress   String
+  receiverName    String
+  receiverAddress String
+  type            MailType
+
+  clientId Int
+  client   Customer @relation(fields: [clientId], references: [id])
+
+  routingAreaId Int
+  routingArea   RoutingArea @relation(fields: [routingAreaId], references: [id])
+}
+
+enum MailType {
+  LETTER
+  PARCEL
+  DOCUMENT
+}
+
+model Bill {
+  id Int @id @default(autoincrement())
+  amount Float
+  billType BillType
+  paymentStatus PaymentStatus
+
+  clientId Int
+  client   Customer @relation(fields: [clientId], references: [id])
+
+  Payment Payment[]
+}
+
+enum BillType {
+  INVOICE
+  RECEIPT
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+  paymentDate DateTime
+  amountPaid Float
+  paymentMethod PaymentMethod
+
+  billId Int
+  bill   Bill @relation(fields: [billId], references: [id])
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_TRANSFER
 }
