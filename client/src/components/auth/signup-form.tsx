@@ -117,7 +117,7 @@ const SignUpForm = () => {
             label={"Confirm Password"}
             id={"confirmPassword"}
             placeholder={"Enter your password again..."}
-            type={"confirmPassword"}
+            type={"password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             disabled={loading}
