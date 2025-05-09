@@ -40,7 +40,7 @@ const SignInForm = () => {
         </div>
 
         <Button type="submit" className="w-full" disabled={loading}>
-          Create Account
+          Sign In
         </Button>
       </div>
     </form>
