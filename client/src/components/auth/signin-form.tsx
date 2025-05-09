@@ -1,14 +1,35 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { InputWithLabel } from "../atoms/InputWithLabel";
 import { Button } from "../ui/button";
+import { loginApi } from "@/api/auth";
+import { signin } from "@/features/auth/authSlice";
 
 const SignInForm = () => {
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await loginApi(username, password);
+      dispatch(signin(res.user));
+      if (res.user.role === "POSTALCLERK") {
+        console.log("this loged postal clerk");
+      }
+      if (res.user.role === "MAIL_DELIVERER") {
+        console.log("this loged mail deliverer");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
