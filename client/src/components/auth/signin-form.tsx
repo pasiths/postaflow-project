@@ -17,10 +17,16 @@ const SignInForm = () => {
     setLoading(true);
 
     try {
-      const res = await loginApi(username, password);
+      interface LoginResponse {
+        user: {
+          role: string;
+        };
+      }
+
+      const res = (await loginApi(username, password)) as LoginResponse;
       dispatch(signin(res.user));
       if (res.user.role === "POSTALCLERK") {
-        console.log("this loged postal clerk");
+        console.log("this loged postal clerk", res);
       }
       if (res.user.role === "MAIL_DELIVERER") {
         console.log("this loged mail deliverer");
