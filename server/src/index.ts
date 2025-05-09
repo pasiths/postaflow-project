@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import cookiesParaser from "cookie-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 
