@@ -11,10 +11,17 @@ const SignInForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPasswordError(null);
     setLoading(true);
+
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      return;
+    }
 
     try {
       interface LoginResponse {
@@ -26,10 +33,10 @@ const SignInForm = () => {
       const res = (await loginApi(username, password)) as LoginResponse;
       dispatch(signin(res.user));
       if (res.user.role === "POSTALCLERK") {
-        console.log("this loged postal clerk", res);
+        console.log("this logged postal clerk", res);
       }
       if (res.user.role === "MAIL_DELIVERER") {
-        console.log("this loged mail deliverer");
+        console.log("this logged mail deliverer");
       }
     } catch (error) {
       console.log(error);
@@ -64,6 +71,9 @@ const SignInForm = () => {
             disabled={loading}
             required
           />
+          {passwordError && (
+            <p className="text-red-500 text-sm">{passwordError}</p>
+          )}
         </div>
 
         <Button type="submit" className="w-full" disabled={loading}>
