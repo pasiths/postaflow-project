@@ -7,7 +7,7 @@ import { ErrorCode } from "../exceptions/root";
 export const CreateMail = async (req: Request, res: Response) => {
   MailSchema.parse(req.body);
 
-  const { senderId, receiverName, receiverAddress, type } = req.body;
+  const { senderId, receiverName, receiverAddress, type, direction } = req.body;
 
   const sender = await prisma.customer.findUnique({
     where: {
@@ -28,6 +28,7 @@ export const CreateMail = async (req: Request, res: Response) => {
       type,
       senderId,
       employeeId: Number(req?.user?.id),
+      direction: direction
     },
     include: {
       sender: true,
@@ -35,11 +36,16 @@ export const CreateMail = async (req: Request, res: Response) => {
   });
 
   if (!mail) {
-    throw new BadRequestException("Mail not created", ErrorCode.INTERNAL_EXCEPTION);
+    throw new BadRequestException(
+      "Mail not created",
+      ErrorCode.INTERNAL_EXCEPTION
+    );
   }
 
   console.log(
-    `LOG_BOOK ${req.user?.username} created mail with ID ${mail.id} at ${new Date().toLocaleString()}`
+    `LOG_BOOK ${req.user?.username} created mail with ID ${
+      mail.id
+    } at ${new Date().toLocaleString()}`
   );
 
   res.json({ mail: mail });
