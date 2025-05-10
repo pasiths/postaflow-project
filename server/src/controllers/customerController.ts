@@ -84,8 +84,9 @@ export const CreateCustomer = async (req: Request, res: Response) => {
 
   customer = await prisma.customer.create({
     data: {
-      fName: firstName,
-      lName: lastName,
+      // Map API schema names to database field names
+      fName: firstName, // firstName (API) -> fName (DB)
+      lName: lastName, // lastName (API) -> lName (DB)
       email,
       contactNum,
       address,
