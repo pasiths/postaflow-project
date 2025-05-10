@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { InputWithLabel } from "../atoms/InputWithLabel";
 import { Button } from "../ui/button";
-import { loginApi } from "@/api/auth";
+import { signinApi } from "@/api/auth";
 import { signin } from "@/features/auth/authSlice";
 
 const SignInForm = () => {
@@ -30,7 +30,7 @@ const SignInForm = () => {
         };
       }
 
-      const res = (await loginApi(username, password)) as LoginResponse;
+      const res = (await signinApi(username, password)) as LoginResponse;
       dispatch(signin(res.user));
       if (res.user.role === "POSTALCLERK") {
         console.log("this logged postal clerk", res);
@@ -59,6 +59,7 @@ const SignInForm = () => {
             disabled={loading}
             autoFocus
             required
+            error={""}
           />
 
           <InputWithLabel
@@ -67,13 +68,11 @@ const SignInForm = () => {
             placeholder={"Enter your password..."}
             type={"password"}
             value={password}
+            error={passwordError || ""}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
             required
           />
-          {passwordError && (
-            <p className="text-red-500 text-sm">{passwordError}</p>
-          )}
         </div>
 
         <Button type="submit" className="w-full" disabled={loading}>
