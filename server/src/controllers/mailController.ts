@@ -50,7 +50,7 @@ export const GetMails = async (req: Request, res: Response) => {
         }
       : undefined,
   });
-  if (!mails) {
+  if (mails.length === 0) {
     throw new BadRequestException(
       "Mails not found",
       ErrorCode.INTERNAL_EXCEPTION
