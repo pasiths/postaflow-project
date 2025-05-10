@@ -6,7 +6,15 @@ import { ErrorCode } from "../exceptions/root";
 import { MailDirection, MailStatus, MailType } from "@prisma/client";
 
 export const GetMails = async (req: Request, res: Response) => {
-  const { receiverName, senderName, type, status, direction, sortBy, sortOrder } = req.query;
+  const {
+    receiverName,
+    senderName,
+    type,
+    status,
+    direction,
+    sortBy,
+    sortOrder,
+  } = req.query;
   const employeeId = Number(req.user?.id);
   const mails = await prisma.mail.findMany({
     where: {
@@ -54,6 +62,37 @@ export const GetMails = async (req: Request, res: Response) => {
     } fetched mails at ${new Date().toLocaleString()}`
   );
   res.json({ mails: mails });
+};
+
+export const GetMailById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(Number(id))) {
+    throw new BadRequestException(
+      "Mail ID is required!",
+      ErrorCode.BAD_REQUEST
+    );
+  }
+
+  const mail = await prisma.mail.findUnique({
+    where: { id: Number(id) },
+    include: {
+      sender: true,
+      routingArea: true,
+    },
+  });
+
+  if (!mail) {
+    throw new BadRequestException("Mail not found!", ErrorCode.MAIL_NOT_FOUND);
+  }
+
+  console.log(
+    `LOG_BOOK ${req.user?.username} fetched mail with ID ${
+      mail.id
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ mail: mail });
 };
 
 export const CreateMail = async (req: Request, res: Response) => {
