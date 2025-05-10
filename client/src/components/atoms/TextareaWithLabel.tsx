@@ -6,6 +6,7 @@ interface TextareaWithLabelProps {
   id: string;
   placeholder: string;
   value: string;
+  error?: string;
   autoComplete?: string;
   rows?: number;
   disabled?: boolean;
@@ -19,6 +20,7 @@ export function TextareaWithLabel({
   id,
   placeholder,
   value,
+  error,
   autoComplete,
   rows,
   disabled = false,
@@ -44,6 +46,7 @@ export function TextareaWithLabel({
         required={required}
         className="w-full"
       />
+      {error && <p className="text-red-500 text-sm px-2">{error}</p>}
     </div>
   );
 }

@@ -11,6 +11,7 @@ interface SelectWithLabelProps {
   label: string;
   id: string;
   placeholder: string;
+  error?: string;
   disabled?: boolean;
   items: {
     id: number;
@@ -25,6 +26,7 @@ const SelectWithLabel = ({
   label,
   id,
   placeholder,
+  error,
   items,
   disabled = false,
   required = false,
@@ -47,6 +49,7 @@ const SelectWithLabel = ({
           ))}
         </SelectContent>
       </Select>
+      {error && <p className="text-red-500 text-sm px-2">{error}</p>}
     </div>
   );
 };

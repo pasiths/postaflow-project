@@ -7,6 +7,7 @@ interface InputWithLabelProps {
   placeholder: string;
   type: string;
   value: string;
+  error?: string;
   autoComplete?: string;
   disabled?: boolean;
   autoFocus?: boolean;
@@ -20,6 +21,7 @@ export function InputWithLabel({
   placeholder,
   type,
   value,
+  error,
   autoComplete,
   disabled = false,
   autoFocus = false,
@@ -44,6 +46,7 @@ export function InputWithLabel({
         required={required}
         className="w-full"
       />
+      {error && <p className="text-red-500 text-sm px-2">{error}</p>}
     </div>
   );
 }
