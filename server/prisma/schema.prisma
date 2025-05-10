@@ -93,11 +93,11 @@ enum ReportType {
 }
 
 model Mail {
-  id              Int        @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   receiverName    String
   receiverAddress String
   type            MailType
-  status          MailStatus @default(PENDING)
+  status          MailStatus    @default(PENDING)
   direction       MailDirection
 
   senderId Int
@@ -149,13 +149,21 @@ model Bill {
 }
 
 enum BillType {
-  INVOICE
-  RECEIPT
+  ELECTRICITY
+  WATER
+  GAS
+  INTERNET
+  PHONE
+  RENT
+  INSURANCE
+  OTHER
 }
 
 enum PaymentStatus {
   PAID
   UNPAID
+  PARTIALLY_PAID
+  OVERDUE
 }
 
 model Payment {
@@ -173,4 +181,5 @@ enum PaymentMethod {
   CREDIT_CARD
   DEBIT_CARD
   BANK_TRANSFER
+  OTHER
 }
