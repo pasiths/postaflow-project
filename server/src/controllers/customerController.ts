@@ -39,6 +39,36 @@ export const GetCustomers = async (req: Request, res: Response) => {
   res.json({ customers: customers });
 };
 
+export const GetCustomerById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(Number(id))) {
+    throw new BadRequestException(
+      "Customer ID is required!",
+      ErrorCode.BAD_REQUEST
+    );
+  }
+
+  const customer = await prisma.customer.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!customer) {
+    throw new BadRequestException(
+      "Customer not found!",
+      ErrorCode.CUSTOMER_NOT_FOUND
+    );
+  }
+
+  console.log(
+    `LOG_BOOK customer= ${id}  Customer ID by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ customer });
+};
+
 export const CreateCustomer = async (req: Request, res: Response) => {
   CustomerSchema.parse(req.body);
 
