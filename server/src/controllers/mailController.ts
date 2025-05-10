@@ -126,13 +126,6 @@ export const CreateMail = async (req: Request, res: Response) => {
     },
   });
 
-  if (!mail) {
-    throw new BadRequestException(
-      "Mail not created",
-      ErrorCode.INTERNAL_EXCEPTION
-    );
-  }
-
   console.log(
     `LOG_BOOK ${req.user?.username} created mail with ID ${
       mail.id
@@ -185,7 +178,7 @@ export const UpdateMail = async (req: Request, res: Response) => {
     if (!Object.values(MailStatus).includes(status as MailStatus)) {
       throw new BadRequestException(
         "Invalid mail status",
-        ErrorCode.INVALIED_MAIL_STATUS
+        ErrorCode.INVALID_MAIL_STATUS
       );
     }
 
@@ -215,10 +208,6 @@ export const UpdateMail = async (req: Request, res: Response) => {
       routingArea: true,
     },
   });
-
-  if (!mail) {
-    throw new BadRequestException("Mail not found!", ErrorCode.MAIL_NOT_FOUND);
-  }
 
   console.log(
     `LOG_BOOK ${req.user?.username} updated mail with ID ${
