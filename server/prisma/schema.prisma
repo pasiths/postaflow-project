@@ -98,6 +98,7 @@ model Mail {
   receiverAddress String
   type            MailType
   status          MailStatus @default(PENDING)
+  direction       MailDirection
 
   senderId Int
   sender   Customer @relation(fields: [senderId], references: [id])
@@ -110,6 +111,11 @@ model Mail {
 
   employeeId Int
   employee   Employee @relation(fields: [employeeId], references: [id])
+}
+
+enum MailDirection {
+  INCOMING
+  OUTGOING
 }
 
 enum MailType {

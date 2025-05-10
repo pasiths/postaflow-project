@@ -3,6 +3,58 @@ import { MailSchema } from "../schema/mail";
 import { prisma } from "..";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
+import { MailDirection, MailStatus, MailType } from "@prisma/client";
+
+export const GetMails = async (req: Request, res: Response) => {
+  const { receiverName, senderName, type, status, direction, sortBy, sortOrder } = req.query;
+  const employeeId = Number(req.user?.id);
+  const mails = await prisma.mail.findMany({
+    where: {
+      employeeId,
+      AND: [
+        receiverName
+          ? {
+              receiverName: {
+                contains: receiverName as string,
+                mode: "insensitive",
+              },
+            }
+          : {},
+        senderName
+          ? {
+              sender: {
+                fName: { contains: senderName as string, mode: "insensitive" },
+              },
+            }
+          : {},
+        type ? { type: { equals: type as MailType } } : {},
+        status ? { status: { equals: status as MailStatus } } : {},
+        direction ? { direction: { equals: direction as MailDirection } } : {},
+      ],
+    },
+    include: {
+      sender: true,
+      routingArea: true,
+    },
+    orderBy: sortBy
+      ? {
+          [sortBy as string]: sortOrder === "desc" ? "desc" : "asc",
+        }
+      : undefined,
+  });
+  if (!mails) {
+    throw new BadRequestException(
+      "Mails not found",
+      ErrorCode.INTERNAL_EXCEPTION
+    );
+  }
+  console.log(
+    `LOG_BOOK ${
+      req.user?.username
+    } fetched mails at ${new Date().toLocaleString()}`
+  );
+  res.json({ mails: mails });
+};
 
 export const CreateMail = async (req: Request, res: Response) => {
   MailSchema.parse(req.body);
@@ -28,7 +80,7 @@ export const CreateMail = async (req: Request, res: Response) => {
       type,
       senderId,
       employeeId: Number(req?.user?.id),
-      direction: direction
+      direction: direction,
     },
     include: {
       sender: true,
