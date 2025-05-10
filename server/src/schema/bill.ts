@@ -25,6 +25,4 @@ export const PaymentSchema = z.object({
     "BANK_TRANSFER",
     "OTHER",
   ]),
-  paymentDate: z.string(),
-  billId: z.string(),
 });
