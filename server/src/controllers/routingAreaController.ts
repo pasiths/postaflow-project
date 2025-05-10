@@ -51,6 +51,38 @@ export const GetRoutingAreas = async (req: Request, res: Response) => {
   res.json({ routingAreas: routingAreas });
 };
 
+export const GetRoutingAreaById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id || isNaN(Number(id))) {
+    throw new NotFoundException(
+      "Routing Area ID is required!",
+      ErrorCode.BAD_REQUEST
+    );
+  }
+
+  const routingArea = await prisma.routingArea.findUnique({
+    where: { id: Number(id) },
+    include: {
+      deliver: true,
+    },
+  });
+
+  if (!routingArea) {
+    throw new NotFoundException(
+      "Routing Area not found!",
+      ErrorCode.ROUTING_AREA_NOT_FOUND
+    );
+  }
+
+  console.log(
+    `LOG_BOOK routingArea= ${id}  Routing Area ID by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ routingArea: routingArea });
+};
+
 export const CreateRoutingArea = async (req: Request, res: Response) => {
   RoutingAreaSchema.parse(req.body);
 
