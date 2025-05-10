@@ -1,11 +1,19 @@
 import { Router } from "express";
 import { errorHandler } from "../error-handler";
 import { authMiddleware, requirePostal } from "../middlewares/authMiddleware";
-import { CreateRoutingArea } from "../controllers/routingAreaController";
+import {
+  CreateRoutingArea,
+  GetRoutingAreas,
+} from "../controllers/routingAreaController";
 
 const routingAreaRoute: Router = Router();
 
 routingAreaRoute.use(errorHandler(authMiddleware));
+routingAreaRoute.get(
+  "/",
+  errorHandler(requirePostal),
+  errorHandler(GetRoutingAreas)
+);
 routingAreaRoute.post(
   "/",
   errorHandler(requirePostal),
