@@ -98,6 +98,7 @@ model Mail {
   receiverAddress String
   type            MailType
   status          MailStatus @default(PENDING)
+  direction       MailDirection
 
   senderId Int
   sender   Customer @relation(fields: [senderId], references: [id])
@@ -112,6 +113,11 @@ model Mail {
   employee   Employee @relation(fields: [employeeId], references: [id])
 }
 
+enum MailDirection {
+  INCOMING
+  OUTGOING
+}
+
 enum MailType {
   LETTER
   PARCEL
@@ -121,7 +127,13 @@ enum MailType {
 enum MailStatus {
   PENDING
   IN_TRANSIT
+  OUT_FOR_DELIVERY
   DELIVERED
+  ATTEMPTED_DELIVERY
+  RETURNED_TO_SENDER
+  CANCELLED
+  LOST
+  HELD_AT_CUSTOMS
 }
 
 model Bill {
