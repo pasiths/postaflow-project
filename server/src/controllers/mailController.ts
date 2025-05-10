@@ -34,9 +34,7 @@ export const CreateMail = async (req: Request, res: Response) => {
     },
   });
 
-  if (!mail) {
-    throw new BadRequestException("Mail not created", ErrorCode.INTERNAL_EXCEPTION);
-  }
+// Removed redundant check for `if (!mail)` as Prisma's `create` method guarantees a result or throws an error.
 
   console.log(
     `LOG_BOOK ${req.user?.username} created mail with ID ${mail.id} at ${new Date().toLocaleString()}`
