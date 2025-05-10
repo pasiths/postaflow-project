@@ -103,3 +103,60 @@ export const CreateCustomer = async (req: Request, res: Response) => {
 
   res.json({ customer });
 };
+
+export const UpdateCustomer = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(Number(id))) {
+    throw new BadRequestException(
+      "Customer ID is required!",
+      ErrorCode.BAD_REQUEST
+    );
+  }
+
+  CustomerSchema.parse(req.body);
+
+  const { firstName, lastName, email, contactNum, address } = req.body;
+
+  let customer = await prisma.customer.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!customer) {
+    throw new BadRequestException(
+      "Customer not found!",
+      ErrorCode.CUSTOMER_NOT_FOUND
+    );
+  }
+
+  if (customer.email !== email) {
+    const existingCustomer = await prisma.customer.findUnique({
+      where: { email },
+    });
+    if (existingCustomer) {
+      throw new BadRequestException(
+        "Customer with this email already exists!",
+        ErrorCode.CUSTOMER_ALREADY_EXISTS
+      );
+    }
+  }
+
+  customer = await prisma.customer.update({
+    where: { id: Number(id) },
+    data: {
+      fName: firstName,
+      lName: lastName,
+      email,
+      contactNum,
+      address,
+    },
+  });
+
+  console.log(
+    `LOG_BOOK customer= ${firstName} updated by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ customer });
+};
