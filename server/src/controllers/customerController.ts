@@ -24,10 +24,7 @@ export const GetCustomers = async (req: Request, res: Response) => {
   });
 
   if (customers.length === 0) {
-    throw new BadRequestException(
-      "No customers found!",
-      ErrorCode.CUSTOMER_NOT_FOUND
-    );
+    return res.json({ customers: [] });
   }
 
   console.log(
