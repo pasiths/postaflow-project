@@ -3,6 +3,7 @@ import { CustomerSchema } from "../schema/customer";
 import { prisma } from "..";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
+import { NotFoundException } from "../exceptions/not-found";
 
 export const GetCustomers = async (req: Request, res: Response) => {
   const { firstName, lastName, email } = req.query;
@@ -51,7 +52,7 @@ export const GetCustomerById = async (req: Request, res: Response) => {
   });
 
   if (!customer) {
-    throw new BadRequestException(
+    throw new NotFoundException(
       "Customer not found!",
       ErrorCode.CUSTOMER_NOT_FOUND
     );

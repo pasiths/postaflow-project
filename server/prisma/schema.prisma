@@ -26,6 +26,8 @@ model Employee {
   status   UserStatus @default(PENDING)
 
   Mail Mail[]
+
+  RoutingArea RoutingArea[]
 }
 
 enum UserRole {
@@ -44,6 +46,9 @@ model RoutingArea {
   id         Int    @id @default(autoincrement())
   homeNumber String
   address    String
+
+  deliverId Int
+  deliver   Employee @relation(fields: [deliverId], references: [id])
 
   Mail Mail[]
 }
