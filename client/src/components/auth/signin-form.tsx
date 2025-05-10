@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { InputWithLabel } from "../atoms/InputWithLabel";
 import { Button } from "../ui/button";
-import { loginApi } from "@/api/auth";
+import { signinApi } from "@/api/auth";
 import { signin } from "@/features/auth/authSlice";
 
 const SignInForm = () => {
@@ -11,19 +11,32 @@ const SignInForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPasswordError(null);
     setLoading(true);
 
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      return;
+    }
+
     try {
-      const res = await loginApi(username, password);
+      interface LoginResponse {
+        user: {
+          role: string;
+        };
+      }
+
+      const res = (await signinApi(username, password)) as LoginResponse;
       dispatch(signin(res.user));
       if (res.user.role === "POSTALCLERK") {
-        console.log("this loged postal clerk");
+        console.log("this logged postal clerk", res);
       }
       if (res.user.role === "MAIL_DELIVERER") {
-        console.log("this loged mail deliverer");
+        console.log("this logged mail deliverer");
       }
     } catch (error) {
       console.log(error);
@@ -46,6 +59,7 @@ const SignInForm = () => {
             disabled={loading}
             autoFocus
             required
+            error={""}
           />
 
           <InputWithLabel
@@ -54,6 +68,7 @@ const SignInForm = () => {
             placeholder={"Enter your password..."}
             type={"password"}
             value={password}
+            error={passwordError || ""}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
             required
