@@ -108,8 +108,8 @@ model Mail {
   inventoryId Int?
   inventory   Inventory? @relation(fields: [inventoryId], references: [id])
 
-  employeeId Int?
-  employee   Employee? @relation(fields: [employeeId], references: [id])
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
 }
 
 enum MailType {
