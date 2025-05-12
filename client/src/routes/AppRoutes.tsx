@@ -8,6 +8,7 @@ import { ProtectedLayout } from '@/layout/ProtectedLayout';
 // import AuthenticatedRoute from '@/guards/AuthenticatedRoute';
 import DashboardPage from '@/pages/dashbord/Dashboard';
 import MailsPage from '@/pages/dashbord/mail/MailsPage';
+import CustomerPage from '@/pages/dashbord/customer/CustomersPage';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const AppRoutes: React.FC = () => {
           {/* <Route element={<PrivateRoute />}> */}
             <Route path="/" element={<DashboardPage />} />
             <Route path="/mails" element={<MailsPage />} />
+            <Route path="/customers" element={<CustomerPage />} />
           {/* </Route> */}
 
           {/* ADMIN or CASHIER */}

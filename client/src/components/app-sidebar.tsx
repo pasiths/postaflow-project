@@ -1,4 +1,4 @@
-import {  Home, Inbox,  } from "lucide-react";
+import { Home, Inbox, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -27,6 +27,11 @@ const items = [
     title: "Mails",
     url: "/mails",
     icon: Inbox,
+  },
+  {
+    title: "Customers",
+    url: "/customers",
+    icon: Users,
   },
 ];
 
@@ -60,7 +65,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <Separator className="mt-2 bg-gray-100" />
-      
+
       <SidebarFooter className="mb-4 ">
         <ConfirmDialog
           title="Are you sure you want to sign out?"
@@ -69,7 +74,7 @@ export function AppSidebar() {
             throw new Error("Function not implemented.");
           }}
           trigger={
-            <Button variant="destructive" >
+            <Button variant="destructive">
               <LogOut className="transform scale-x-[-1]" />
               Sign out
             </Button>
