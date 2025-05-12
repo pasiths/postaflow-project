@@ -23,8 +23,12 @@ apiClient.interceptors.request.use(
 // Add a response interceptor
 apiClient.interceptors.response.use(
   (response) => {
-    if (response.data?.message) {
-      toast.success(response.data.message, {
+    interface ResponseData {
+      message?: string;
+    }
+    const data = response.data as ResponseData;
+    if (data.message) {
+      toast.success(data.message, {
         position: "top-right",
         autoClose: 3000,
         theme: "colored",
