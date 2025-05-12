@@ -14,16 +14,20 @@ datasource db {
 }
 
 model Employee {
-  id       Int    @id @default(autoincrement())
-  username String @unique
+  id       Int        @id @default(autoincrement())
+  username String     @unique
   fName    String
   lName    String
-  email    String @unique
+  email    String     @unique
   phoneNum String
   address  String
   password String
-  role    UserRole
-  status UserStatus @default(PENDING)
+  role     UserRole
+  status   UserStatus @default(PENDING)
+
+  Mail Mail[]
+
+  RoutingArea RoutingArea[]
 }
 
 enum UserRole {
@@ -43,6 +47,9 @@ model RoutingArea {
   homeNumber String
   address    String
 
+  deliverId Int
+  deliver   Employee @relation(fields: [deliverId], references: [id])
+
   Mail Mail[]
 }
 
@@ -50,9 +57,9 @@ model Customer {
   id         Int    @id @default(autoincrement())
   fName      String
   lName      String
+  email      String @unique
   contactNum String
   address    String
-  email      String @unique
 
   Bill Bill[]
 
@@ -65,6 +72,8 @@ model Inventory {
   quantity      Int
   stockStatus   StockStatus
   lastOrderDate DateTime
+
+  Mail Mail[]
 }
 
 enum StockStatus {
@@ -84,18 +93,29 @@ enum ReportType {
 }
 
 model Mail {
-  id              Int      @id @default(autoincrement())
-  senderName      String
-  senderAddress   String
+  id              Int           @id @default(autoincrement())
   receiverName    String
   receiverAddress String
   type            MailType
+  status          MailStatus    @default(PENDING)
+  direction       MailDirection
 
-  clientId Int
-  client   Customer @relation(fields: [clientId], references: [id])
+  senderId Int
+  sender   Customer @relation(fields: [senderId], references: [id])
 
-  routingAreaId Int
-  routingArea   RoutingArea @relation(fields: [routingAreaId], references: [id])
+  routingAreaId Int?
+  routingArea   RoutingArea? @relation(fields: [routingAreaId], references: [id])
+
+  inventoryId Int?
+  inventory   Inventory? @relation(fields: [inventoryId], references: [id])
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+}
+
+enum MailDirection {
+  INCOMING
+  OUTGOING
 }
 
 enum MailType {
@@ -104,10 +124,22 @@ enum MailType {
   DOCUMENT
 }
 
+enum MailStatus {
+  PENDING
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  ATTEMPTED_DELIVERY
+  RETURNED_TO_SENDER
+  CANCELLED
+  LOST
+  HELD_AT_CUSTOMS
+}
+
 model Bill {
-  id Int @id @default(autoincrement())
-  amount Float
-  billType BillType
+  id            Int           @id @default(autoincrement())
+  amount        Float
+  billType      BillType
   paymentStatus PaymentStatus
 
   clientId Int
@@ -117,19 +149,27 @@ model Bill {
 }
 
 enum BillType {
-  INVOICE
-  RECEIPT
+  ELECTRICITY
+  WATER
+  GAS
+  INTERNET
+  PHONE
+  RENT
+  INSURANCE
+  OTHER
 }
 
 enum PaymentStatus {
   PAID
   UNPAID
+  PARTIALLY_PAID
+  OVERDUE
 }
 
 model Payment {
-  id Int @id @default(autoincrement())
-  paymentDate DateTime
-  amountPaid Float
+  id            Int           @id @default(autoincrement())
+  paymentDate   DateTime
+  amountPaid    Float
   paymentMethod PaymentMethod
 
   billId Int
@@ -141,4 +181,5 @@ enum PaymentMethod {
   CREDIT_CARD
   DEBIT_CARD
   BANK_TRANSFER
+  OTHER
 }
