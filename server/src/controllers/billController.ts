@@ -4,7 +4,37 @@ import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { NotFoundException } from "../exceptions/not-found";
 import { BillSchema, PaymentSchema } from "../schema/bill";
-import { PaymentStatus } from "@prisma/client";
+import { BillType, PaymentStatus } from "@prisma/client";
+
+export const GetBills = async (req: Request, res: Response) => {
+  const { billType, paymentStatus } = req.query;
+
+  const bills = await prisma.bill.findMany({
+    where: {
+      AND: [
+        billType
+          ? { billType: { equals: billType as BillType } }
+          : {},
+        paymentStatus
+          ? {
+              paymentStatus: {
+                equals: paymentStatus as PaymentStatus,
+              },
+            }
+          : {},
+      ],
+    },
+  });
+  if (bills.length === 0) {
+    return res.json({ bills: [] });
+  }
+  console.log(
+    `LOG_BOOK bill= ${billType} ${paymentStatus} searched by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+  res.json({ bills: bills });
+};
 
 export const CreateBill = async (req: Request, res: Response) => {
   BillSchema.parse(req.body);
@@ -60,14 +90,14 @@ export const CreatePayment = async (req: Request, res: Response) => {
     throw new NotFoundException("Bill not found!", ErrorCode.BILL_NOT_FOUND);
   }
 
-const payment = await prisma.payment.create({
+  const payment = await prisma.payment.create({
     data: {
-        amountPaid,
-        paymentMethod,
-        paymentDate: paymentDate || new Date(),
-        billId: Number(id),
+      amountPaid,
+      paymentMethod,
+      paymentDate: paymentDate || new Date(),
+      billId: Number(id),
     },
-});
+  });
 
   await prisma.bill.update({
     where: { id: Number(id) },
