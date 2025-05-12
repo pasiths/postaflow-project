@@ -1,6 +1,6 @@
 import "./App.css";
 import OfflineBanner from "./components/networkStatus/offlineBanner";
-import { NetworkStatusProvider } from "./context/NetworkStatusProvider";
+import { NetworkStatusProvider } from "./contexts/NetworkStatusProvider";
 import AppRoutes from "./routes/AppRoutes";
 import { ToastContainer } from "react-toastify";
 

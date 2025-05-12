@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { NetworkStatusContext } from "../../context/NetworkStatusProvider";
+import { NetworkStatusContext } from "../../contexts/NetworkStatusProvider";
 
 const OfflineBanner = () => {
   const isOnline = useContext(NetworkStatusContext);
