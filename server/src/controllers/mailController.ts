@@ -42,7 +42,11 @@ export const GetMails = async (req: Request, res: Response) => {
     },
     include: {
       sender: true,
-      routingArea: true,
+      routingArea: {
+        include:{
+          deliver: true,
+        }
+      },
     },
     orderBy: sortBy
       ? {

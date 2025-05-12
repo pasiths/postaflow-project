@@ -44,8 +44,7 @@ enum UserStatus {
 
 model RoutingArea {
   id         Int    @id @default(autoincrement())
-  homeNumber String
-  address    String
+  area    String
 
   deliverId Int
   deliver   Employee @relation(fields: [deliverId], references: [id])
