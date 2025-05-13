@@ -43,8 +43,8 @@ enum UserStatus {
 }
 
 model RoutingArea {
-  id         Int    @id @default(autoincrement())
-  area    String
+  id   Int    @id @default(autoincrement())
+  area String
 
   deliverId Int
   deliver   Employee @relation(fields: [deliverId], references: [id])
@@ -61,7 +61,6 @@ model Customer {
   address    String
 
   Bill Bill[]
-
 
   ReceiverMail Mail[] @relation("ReceiverRelation")
 
@@ -95,10 +94,10 @@ enum ReportType {
 }
 
 model Mail {
-  id              Int           @id @default(autoincrement())
-  type            MailType
-  status          MailStatus    @default(PENDING)
-  direction       MailDirection
+  id        Int           @id @default(autoincrement())
+  type      MailType
+  status    MailStatus    @default(PENDING)
+  direction MailDirection
 
   receiverId Int
   receiver   Customer @relation("ReceiverRelation", fields: [receiverId], references: [id])
@@ -143,12 +142,14 @@ model Bill {
   id            Int           @id @default(autoincrement())
   amount        Float
   billType      BillType
-  paymentStatus PaymentStatus
+  accountNumber String
+  amountPaid    Float
+  paymentMethod PaymentMethod
 
   clientId Int
   client   Customer @relation(fields: [clientId], references: [id])
 
-  Payment Payment[]
+  createdAt DateTime @default(now())
 }
 
 enum BillType {
@@ -160,23 +161,6 @@ enum BillType {
   RENT
   INSURANCE
   OTHER
-}
-
-enum PaymentStatus {
-  PAID
-  UNPAID
-  PARTIALLY_PAID
-  OVERDUE
-}
-
-model Payment {
-  id            Int           @id @default(autoincrement())
-  paymentDate   DateTime
-  amountPaid    Float
-  paymentMethod PaymentMethod
-
-  billId Int
-  bill   Bill @relation(fields: [billId], references: [id])
 }
 
 enum PaymentMethod {

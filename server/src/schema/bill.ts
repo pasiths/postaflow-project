@@ -12,17 +12,8 @@ export const BillSchema = z.object({
     "INSURANCE",
     "OTHER",
   ]),
-  paymentStatus: z.enum(["PAID", "UNPAID", "PARTIALLY_PAID", "OVERDUE"]),
+  accountNumber: z.string().optional(),
+  amountPaid: z.number().nonnegative().optional(),
+  paymentMethod: z.enum(["CASH", "CREDIT_CARD", "BANK_TRANSFER", "OTHER"]).optional(),
   clientId: z.string(),
-});
-
-export const PaymentSchema = z.object({
-  amountPaid: z.number().positive(),
-  paymentMethod: z.enum([
-    "CREDIT_CARD",
-    "DEBIT_CARD",
-    "CASH",
-    "BANK_TRANSFER",
-    "OTHER",
-  ]),
 });
