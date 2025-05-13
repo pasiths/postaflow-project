@@ -1,15 +1,16 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignInPage from '@/pages/auth/SignIn';
-import SignUpPage from '@/pages/auth/SignUp';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignInPage from "@/pages/auth/SignIn";
+import SignUpPage from "@/pages/auth/SignUp";
 
-import { ProtectedLayout } from '@/layout/ProtectedLayout';
+import { ProtectedLayout } from "@/layout/ProtectedLayout";
 // import PrivateRoute from '@/guards/PrivateRoute';
 // import AuthenticatedRoute from '@/guards/AuthenticatedRoute';
-import DashboardPage from '@/pages/dashbord/Dashboard';
-import MailsPage from '@/pages/dashbord/mail/MailsPage';
-import CustomerPage from '@/pages/dashbord/customer/CustomersPage';
-import RoutingAreaPage from '@/pages/dashbord/routingArea/routingAreaPage';
+import DashboardPage from "@/pages/dashbord/Dashboard";
+import MailsPage from "@/pages/dashbord/mail/MailsPage";
+import CustomerPage from "@/pages/dashbord/customer/CustomersPage";
+import RoutingAreaPage from "@/pages/dashbord/routingArea/routingAreaPage";
+import EmployeesPage from "@/pages/dashbord/employee/EmployeesPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -23,10 +24,11 @@ const AppRoutes: React.FC = () => {
         <Route element={<ProtectedLayout />}>
           {/* ADMIN only */}
           {/* <Route element={<PrivateRoute />}> */}
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/mails" element={<MailsPage />} />
-            <Route path="/routingareas" element={<RoutingAreaPage />} />
-            <Route path="/customers" element={<CustomerPage />} />
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/mails" element={<MailsPage />} />
+          <Route path="/routingareas" element={<RoutingAreaPage />} />
+          <Route path="/customers" element={<CustomerPage />} />
+          <Route path="/employees" element={<EmployeesPage />} />
           {/* </Route> */}
 
           {/* ADMIN or CASHIER */}
