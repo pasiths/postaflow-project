@@ -9,6 +9,7 @@ import { ProtectedLayout } from '@/layout/ProtectedLayout';
 import DashboardPage from '@/pages/dashbord/Dashboard';
 import MailsPage from '@/pages/dashbord/mail/MailsPage';
 import CustomerPage from '@/pages/dashbord/customer/CustomersPage';
+import RoutingAreaPage from '@/pages/dashbord/routingArea/routingAreaPage';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const AppRoutes: React.FC = () => {
           {/* <Route element={<PrivateRoute />}> */}
             <Route path="/" element={<DashboardPage />} />
             <Route path="/mails" element={<MailsPage />} />
+            <Route path="/routingareas" element={<RoutingAreaPage />} />
             <Route path="/customers" element={<CustomerPage />} />
           {/* </Route> */}
 
