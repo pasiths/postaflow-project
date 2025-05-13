@@ -6,35 +6,12 @@ import { ErrorCode } from "../exceptions/root";
 import { MailDirection, MailStatus, MailType } from "@prisma/client";
 
 export const GetMails = async (req: Request, res: Response) => {
-  const {
-    receiverName,
-    senderName,
-    type,
-    status,
-    direction,
-    sortBy,
-    sortOrder,
-  } = req.query;
+  const { type, status, direction, sortBy, sortOrder } = req.query;
   const employeeId = Number(req.user?.id);
   const mails = await prisma.mail.findMany({
     where: {
       employeeId,
       AND: [
-        receiverName
-          ? {
-              receiverName: {
-                contains: receiverName as string,
-                mode: "insensitive",
-              },
-            }
-          : {},
-        senderName
-          ? {
-              sender: {
-                fName: { contains: senderName as string, mode: "insensitive" },
-              },
-            }
-          : {},
         type ? { type: { equals: type as MailType } } : {},
         status ? { status: { equals: status as MailStatus } } : {},
         direction ? { direction: { equals: direction as MailDirection } } : {},
@@ -42,6 +19,7 @@ export const GetMails = async (req: Request, res: Response) => {
     },
     include: {
       sender: true,
+      receiver: true,
       routingArea: {
         include: {
           deliver: {
@@ -94,6 +72,7 @@ export const GetMailById = async (req: Request, res: Response) => {
     where: { id: Number(id) },
     include: {
       sender: true,
+      receiver: true,
       routingArea: {
         include: {
           deliver: {
@@ -130,7 +109,7 @@ export const GetMailById = async (req: Request, res: Response) => {
 export const CreateMail = async (req: Request, res: Response) => {
   MailSchema.parse(req.body);
 
-  const { senderId, receiverName, receiverAddress, type, direction } = req.body;
+  const { senderId, receiverId, type, direction } = req.body;
 
   const sender = await prisma.customer.findUnique({
     where: {
@@ -144,12 +123,23 @@ export const CreateMail = async (req: Request, res: Response) => {
     );
   }
 
+  const receiver = await prisma.customer.findUnique({
+    where: {
+      id: receiverId,
+    },
+  });
+  if (!receiver) {
+    throw new BadRequestException(
+      "Receiver not found",
+      ErrorCode.RECEIVER_NOT_FOUND
+    );
+  }
+
   const mail = await prisma.mail.create({
     data: {
-      receiverName,
-      receiverAddress,
       type,
       senderId,
+      receiverId,
       employeeId: Number(req?.user?.id),
       direction: direction,
     },
