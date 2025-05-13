@@ -33,7 +33,7 @@ const SelectWithLabel = ({
   onChange,
 }: SelectWithLabelProps) => {
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 w-full">
       <Label htmlFor={id} className="text-sm text-muted-foreground">
         {label}
       </Label>

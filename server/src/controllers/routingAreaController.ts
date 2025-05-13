@@ -6,22 +6,12 @@ import { ErrorCode } from "../exceptions/root";
 import { UserRole, UserStatus } from "@prisma/client";
 
 export const GetRoutingAreas = async (req: Request, res: Response) => {
-  const { homeNumber, address, deliverName } = req.query;
+  const { area, deliverName } = req.query;
 
   const routingAreas = await prisma.routingArea.findMany({
     where: {
       AND: [
-        homeNumber
-          ? {
-              homeNumber: {
-                contains: homeNumber as string,
-                mode: "insensitive",
-              },
-            }
-          : {},
-        address
-          ? { address: { contains: address as string, mode: "insensitive" } }
-          : {},
+        area ? { area: { contains: area as string, mode: "insensitive" } } : {},
         deliverName
           ? {
               deliver: {
@@ -35,7 +25,19 @@ export const GetRoutingAreas = async (req: Request, res: Response) => {
       ],
     },
     include: {
-      deliver: true,
+      deliver: {
+        select: {
+          id: true,
+          username: true,
+          fName: true,
+          lName: true,
+          email: true,
+          phoneNum: true,
+          address: true,
+          role: true,
+          status: true,
+        },
+      },
     },
   });
   if (routingAreas.length === 0) {
@@ -43,7 +45,7 @@ export const GetRoutingAreas = async (req: Request, res: Response) => {
   }
 
   console.log(
-    `LOG_BOOK routingArea= ${homeNumber} ${address} ${deliverName} searched by ${
+    `LOG_BOOK routingArea={area} ${deliverName} searched by ${
       req.user?.username
     } at ${new Date().toLocaleString()}`
   );
@@ -63,7 +65,19 @@ export const GetRoutingAreaById = async (req: Request, res: Response) => {
   const routingArea = await prisma.routingArea.findUnique({
     where: { id: Number(id) },
     include: {
-      deliver: true,
+      deliver: {
+        select: {
+          id: true,
+          username: true,
+          fName: true,
+          lName: true,
+          email: true,
+          phoneNum: true,
+          address: true,
+          role: true,
+          status: true,
+        },
+      },
     },
   });
 
@@ -86,7 +100,7 @@ export const GetRoutingAreaById = async (req: Request, res: Response) => {
 export const CreateRoutingArea = async (req: Request, res: Response) => {
   RoutingAreaSchema.parse(req.body);
 
-  const { homeNumber, address, deliverId } = req.body;
+  const { area, deliverId } = req.body;
 
   const deliver = await prisma.employee.findUnique({
     where: { id: Number(deliverId) },
@@ -109,8 +123,7 @@ export const CreateRoutingArea = async (req: Request, res: Response) => {
 
   const routingArea = await prisma.routingArea.create({
     data: {
-      homeNumber,
-      address,
+      area,
       deliverId: Number(deliverId),
     },
   });

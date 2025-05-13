@@ -44,8 +44,7 @@ enum UserStatus {
 
 model RoutingArea {
   id         Int    @id @default(autoincrement())
-  homeNumber String
-  address    String
+  area    String
 
   deliverId Int
   deliver   Employee @relation(fields: [deliverId], references: [id])
@@ -63,7 +62,10 @@ model Customer {
 
   Bill Bill[]
 
-  Mail Mail[]
+
+  ReceiverMail Mail[] @relation("ReceiverRelation")
+
+  SenderMail Mail[] @relation("SenderRelation")
 }
 
 model Inventory {
@@ -94,14 +96,15 @@ enum ReportType {
 
 model Mail {
   id              Int           @id @default(autoincrement())
-  receiverName    String
-  receiverAddress String
   type            MailType
   status          MailStatus    @default(PENDING)
   direction       MailDirection
 
+  receiverId Int
+  receiver   Customer @relation("ReceiverRelation", fields: [receiverId], references: [id])
+
   senderId Int
-  sender   Customer @relation(fields: [senderId], references: [id])
+  sender   Customer @relation("SenderRelation", fields: [senderId], references: [id])
 
   routingAreaId Int?
   routingArea   RoutingArea? @relation(fields: [routingAreaId], references: [id])
