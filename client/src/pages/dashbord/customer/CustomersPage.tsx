@@ -1,11 +1,14 @@
-import { getCustomers } from "@/api/cusstomer";
+import { getCustomers } from "@/api/customer";
 import { DataTable } from "@/components/atoms/DataTable";
+import CustomerEditor from "@/components/customers/editor";
 import { Button } from "@/components/ui/button";
 import useFetch from "@/hooks/useFetch";
 import type { Customer } from "@/types/customer";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: "id",
@@ -29,12 +32,13 @@ export const columns: ColumnDef<Customer>[] = [
     accessorKey: "address",
     header: "Address",
   },
-  
 ];
 
 const CustomerPage = () => {
   const { data, loading } = useFetch<{ customers: Customer[] }>(getCustomers);
   const customers = Array.isArray(data) ? data : data?.customers || [];
+
+  const [customerEditBox, setCustomerEditBox] = useState(false);
 
   if (loading) {
     return (
@@ -56,7 +60,10 @@ const CustomerPage = () => {
       </div>
 
       <div className="flex items-center justify-end">
-        <Button className="text-sm w-50 h-10">
+        <Button
+          className="text-sm w-50 h-10"
+          onClick={() => setCustomerEditBox(true)}
+        >
           Add New Customer <Plus size={14} />
         </Button>
       </div>
@@ -64,15 +71,23 @@ const CustomerPage = () => {
       <DataTable
         columns={columns}
         data={customers}
-        filterKeys={[
-          "id",
-          "customerName",
-          "email",
-          "contactNum",
-          "address",
-        ]}
+        filterKeys={["id", "customerName", "email", "contactNum", "address"]}
         filterPlaceholder="Search customer..."
       />
+
+      {customerEditBox && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-3xl relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-black"
+              onClick={() => setCustomerEditBox(false)}
+            >
+              ✕
+            </button>
+            <CustomerEditor />
+          </div>
+        </div>
+      )}
     </main>
   );
 };

@@ -6,3 +6,11 @@ export interface Customer {
   contactNum: string;
   address: string;
 }
+
+export interface CreateCustomerInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  contactNum: string;
+  address: string;
+}
