@@ -25,7 +25,19 @@ export const GetRoutingAreas = async (req: Request, res: Response) => {
       ],
     },
     include: {
-      deliver: true,
+      deliver: {
+        select: {
+          id: true,
+          username: true,
+          fName: true,
+          lName: true,
+          email: true,
+          phoneNum: true,
+          address: true,
+          role: true,
+          status: true,
+        },
+      },
     },
   });
   if (routingAreas.length === 0) {
@@ -53,7 +65,19 @@ export const GetRoutingAreaById = async (req: Request, res: Response) => {
   const routingArea = await prisma.routingArea.findUnique({
     where: { id: Number(id) },
     include: {
-      deliver: true,
+      deliver: {
+        select: {
+          id: true,
+          username: true,
+          fName: true,
+          lName: true,
+          email: true,
+          phoneNum: true,
+          address: true,
+          role: true,
+          status: true,
+        },
+      },
     },
   });
 

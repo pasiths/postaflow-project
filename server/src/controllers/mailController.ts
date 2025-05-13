@@ -43,9 +43,21 @@ export const GetMails = async (req: Request, res: Response) => {
     include: {
       sender: true,
       routingArea: {
-        include:{
-          deliver: true,
-        }
+        include: {
+          deliver: {
+            select: {
+              id: true,
+              username: true,
+              fName: true,
+              lName: true,
+              email: true,
+              phoneNum: true,
+              address: true,
+              role: true,
+              status: true,
+            },
+          },
+        },
       },
     },
     orderBy: sortBy
@@ -82,7 +94,23 @@ export const GetMailById = async (req: Request, res: Response) => {
     where: { id: Number(id) },
     include: {
       sender: true,
-      routingArea: true,
+      routingArea: {
+        include: {
+          deliver: {
+            select: {
+              id: true,
+              username: true,
+              fName: true,
+              lName: true,
+              email: true,
+              phoneNum: true,
+              address: true,
+              role: true,
+              status: true,
+            },
+          },
+        },
+      },
     },
   });
 
