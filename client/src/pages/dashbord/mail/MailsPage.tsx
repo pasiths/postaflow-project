@@ -1,10 +1,12 @@
 import { getMails } from "@/api/mail";
 import { DataTable } from "@/components/atoms/DataTable";
+import MailEditor from "@/components/mail/editor";
 import { Button } from "@/components/ui/button";
 import useFetch from "@/hooks/useFetch";
 import type { Mail } from "@/types/mail";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 export const columns: ColumnDef<Mail>[] = [
   {
@@ -22,11 +24,13 @@ export const columns: ColumnDef<Mail>[] = [
     header: "Sender Address",
   },
   {
-    accessorKey: "receiverName",
+    accessorFn: (row) => row.receiver?.fName + " " + row.receiver?.lName,
+    id: "receiverName",
     header: "Receiver Name",
+    cell: ({ row }) => <div>{row.getValue("receiverName") ?? "—"}</div>,
   },
   {
-    accessorKey: "receiverAddress",
+    accessorKey: "receiver.address",
     header: "Reciver Address",
   },
   {
@@ -65,6 +69,8 @@ const MailsPage = () => {
   const { data, loading } = useFetch<{ mails: Mail[] }>(getMails);
   const mails = Array.isArray(data) ? data : data?.mails || [];
 
+  const [editorBox, setEditorBox] = useState(false);
+
   if (loading) {
     return (
       <main className="container mx-auto mt-4 p-4 min-h-[calc(100vh-4rem)] flex items-center justify-center">
@@ -85,7 +91,10 @@ const MailsPage = () => {
       </div>
 
       <div className="flex items-center justify-end">
-        <Button className="text-sm w-50 h-10">
+        <Button
+          className="text-sm w-50 h-10"
+          onClick={() => setEditorBox(true)}
+        >
           Add New Mail <Plus size={14} />
         </Button>
       </div>
@@ -107,6 +116,20 @@ const MailsPage = () => {
         ]}
         filterPlaceholder="Search mails..."
       />
+
+      {editorBox && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-4xl relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-black"
+              onClick={() => setEditorBox(false)}
+            >
+              ✕
+            </button>
+            <MailEditor />
+          </div>
+        </div>
+      )}
     </main>
   );
 };

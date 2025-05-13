@@ -1,4 +1,5 @@
 export interface Customer {
+  [x: string]: any;
   id: number;
   fName: string;
   lName: string;
