@@ -6,20 +6,16 @@ import { ErrorCode } from "../exceptions/root";
 import { NotFoundException } from "../exceptions/not-found";
 
 export const GetCustomers = async (req: Request, res: Response) => {
-  const { firstName, lastName, email } = req.query;
+  const { q } = req.query;
+  const searchQuery = typeof q === 'string' ? q : '';
 
   const customers = await prisma.customer.findMany({
     where: {
-      AND: [
-        firstName
-          ? { fName: { contains: firstName as string, mode: "insensitive" } }
-          : {},
-        lastName
-          ? { lName: { contains: lastName as string, mode: "insensitive" } }
-          : {},
-        email
-          ? { email: { contains: email as string, mode: "insensitive" } }
-          : {},
+      OR: [
+        { fName: { contains: searchQuery, mode: 'insensitive' } },
+        { lName: { contains: searchQuery, mode: 'insensitive' } },
+        { email: { contains: searchQuery, mode: 'insensitive' } },
+        { contactNum: { contains: searchQuery } },
       ],
     },
   });
@@ -29,7 +25,7 @@ export const GetCustomers = async (req: Request, res: Response) => {
   }
 
   console.log(
-    `LOG_BOOK customer= ${firstName} ${lastName} ${email} searched by ${
+    `LOG_BOOK customer= ${searchQuery} searched by ${
       req.user?.username
     } at ${new Date().toLocaleString()}`
   );
