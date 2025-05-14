@@ -53,18 +53,24 @@ model RoutingArea {
 }
 
 model Customer {
-  id         Int    @id @default(autoincrement())
+  id         Int            @id @default(autoincrement())
   fName      String
   lName      String
-  email      String @unique
+  email      String         @unique
   contactNum String
   address    String
+  status     CustomerStatus @default(ACTIVE)
 
   Bill Bill[]
 
   ReceiverMail Mail[] @relation("ReceiverRelation")
 
   SenderMail Mail[] @relation("SenderRelation")
+}
+
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
 }
 
 model Inventory {

@@ -4,18 +4,26 @@ import { prisma } from "..";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { NotFoundException } from "../exceptions/not-found";
+import { CustomerStatus } from "@prisma/client";
 
 export const GetCustomers = async (req: Request, res: Response) => {
-  const { q } = req.query;
-  const searchQuery = typeof q === 'string' ? q : '';
+  const { q,status } = req.query;
+  const searchQuery = typeof q === "string" ? q : "";
 
   const customers = await prisma.customer.findMany({
     where: {
       OR: [
-        { fName: { contains: searchQuery, mode: 'insensitive' } },
-        { lName: { contains: searchQuery, mode: 'insensitive' } },
-        { email: { contains: searchQuery, mode: 'insensitive' } },
+        { fName: { contains: searchQuery, mode: "insensitive" } },
+        { lName: { contains: searchQuery, mode: "insensitive" } },
+        { email: { contains: searchQuery, mode: "insensitive" } },
         { contactNum: { contains: searchQuery } },
+      ],
+      AND: [
+        {
+          status: status
+            ? (status as CustomerStatus)
+            : undefined,
+        },
       ],
     },
   });
