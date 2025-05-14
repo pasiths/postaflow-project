@@ -1,10 +1,12 @@
 import { getBills } from "@/api/bill";
 import { DataTable } from "@/components/atoms/DataTable";
+import BillEditor from "@/components/bill/editor";
 import { Button } from "@/components/ui/button";
 import useFetch from "@/hooks/useFetch";
 import type { Bill } from "@/types/bill";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const columns: ColumnDef<Bill>[] = [
@@ -26,7 +28,7 @@ export const columns: ColumnDef<Bill>[] = [
     accessorKey: "accountNumber",
     header: "Account Number",
   },
-  
+
   {
     accessorKey: "amount",
     header: "Amount",
@@ -42,10 +44,10 @@ export const columns: ColumnDef<Bill>[] = [
 ];
 
 const BillsPage = () => {
-  const { data, loading } = useFetch<{ bills: Bill[] }>(
-    getBills
-  );
+  const { data, loading } = useFetch<{ bills: Bill[] }>(getBills);
   const bills = Array.isArray(data) ? data : data?.bills || [];
+
+  const [editBox, setEditBox] = useState(false);
 
   if (loading) {
     return (
@@ -67,8 +69,9 @@ const BillsPage = () => {
       </div>
 
       <div className="flex items-center justify-end">
-        <Button className="text-sm w-50 h-10" onClick={() => {}}>
-          Add New Bill<Plus size={14} />
+        <Button className="text-sm w-50 h-10" onClick={() => setEditBox(true)}>
+          Add New Bill
+          <Plus size={14} />
         </Button>
       </div>
 
@@ -78,6 +81,20 @@ const BillsPage = () => {
         filterKeys={["id", "deliverName", "area"]}
         filterPlaceholder="Search Bills..."
       />
+
+      {editBox && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-4xl relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-black"
+              onClick={() => setEditBox(false)}
+            >
+              ✕
+            </button>
+            <BillEditor />
+          </div>
+        </div>
+      )}
     </main>
   );
 };
