@@ -41,7 +41,7 @@ const RoutingAreaEditor = ({ routingArea }: { routingArea?: RoutingArea }) => {
       setLastName(routingArea.deliver.lName);
       setEmail(routingArea.deliver.email);
       setContactNum(routingArea.deliver.phoneNum);
-      setArea(routingArea.deliver.address);
+      setArea(routingArea.area);
       setStatus(routingArea.status);
 
       setDeliverId(routingArea.deliver.id.toString());
