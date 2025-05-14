@@ -4,8 +4,8 @@ export interface Employee {
   fName: string;
   lName: string;
   email: string;
-  phoneNu: string;
+  phoneNum: string;
   address: string;
   role: string;
-  statu: string;
+  status: string;
 }

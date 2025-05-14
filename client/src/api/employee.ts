@@ -16,3 +16,7 @@ export const getEmployees = async ({
   });
   return response.data as { employees: Employee[] };
 };
+
+export const deleteEmployee = async (id: string): Promise<void> => {
+  await apiClient.delete(`/employee/${id}`);
+};

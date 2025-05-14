@@ -1,56 +1,176 @@
 import { getEmployees } from "@/api/employee";
 import { DataTable } from "@/components/atoms/DataTable";
+import EmployeePreview from "@/components/employee/preview";
 import { Button } from "@/components/ui/button";
 import useFetch from "@/hooks/useFetch";
 import type { Employee } from "@/types/employee";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { ArrowUpDown, Eye, Plus } from "lucide-react";
+import React from "react";
 import { useCallback } from "react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "id",
-    header: "ID",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center gap-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ID
+          <ArrowUpDown size={16} />
+        </span>
+      );
+    },
   },
   {
     accessorFn: (row) => row?.fName + " " + row.lName,
-    id: "employeeName", // flat id for filtering and access
-    header: "Employee Name",
+    id: "employeeName",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center gap-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Employee Name
+          <ArrowUpDown size={16} />
+        </span>
+      );
+    },
     cell: ({ row }) => <div>{row.getValue("employeeName") ?? "—"}</div>,
   },
   {
     accessorKey: "username",
-    header: "Username",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center gap-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Username
+          <ArrowUpDown size={16} />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center gap-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown size={16} />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "phoneNum",
-    header: "Phone Number",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center gap-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Phone Number
+          <ArrowUpDown size={16} />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "address",
-    header: "Address",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center gap-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Address
+          <ArrowUpDown size={16} />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "role",
-    header: "User Role",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center gap-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          User Role
+          <ArrowUpDown size={16} />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center gap-1"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown size={16} />
+        </span>
+      );
+    },
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const employee = row.original;
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [preview, setPreview] = React.useState(false);
+
+      return (
+        <>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="cursor-pointer"
+            onClick={() => setPreview(true)}
+          >
+            <Eye />
+          </Button>
+
+          {preview && (
+            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-4xl relative">
+                <button
+                  className="absolute top-2 right-2 text-gray-500 hover:text-black"
+                  onClick={() => setPreview(false)}
+                >
+                  ✕
+                </button>
+                <EmployeePreview employee={employee} />
+              </div>
+            </div>
+          )}
+        </>
+      );
+    },
   },
 ];
 
 const EmployeesPage = () => {
-  const fetchEmployees = useCallback(()=> getEmployees({ role: "", status: "" }), []);
+  const fetchEmployees = useCallback(
+    () => getEmployees({ role: "", status: "" }),
+    []
+  );
   const { data, loading } = useFetch(fetchEmployees);
   // const { data, loading } = useFetch<{ employees: Employee[] }>(getEmployees);
   const employees = Array.isArray(data) ? data : data?.employees || [];
-
 
   if (loading) {
     return (
@@ -72,10 +192,7 @@ const EmployeesPage = () => {
       </div>
 
       <div className="flex items-center justify-end">
-        <Button
-          className="text-sm w-50 h-10"
-          onClick={() => {}}
-        >
+        <Button className="text-sm w-50 h-10" onClick={() => {}}>
           Add New Employee <Plus size={14} />
         </Button>
       </div>
@@ -86,8 +203,6 @@ const EmployeesPage = () => {
         filterKeys={["id", "customerName", "email", "contactNum", "address"]}
         filterPlaceholder="Search employees..."
       />
-
-      
     </main>
   );
 };
