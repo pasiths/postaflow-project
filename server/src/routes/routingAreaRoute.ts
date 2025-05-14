@@ -3,6 +3,7 @@ import { errorHandler } from "../error-handler";
 import { authMiddleware, requirePostal } from "../middlewares/authMiddleware";
 import {
   CreateRoutingArea,
+  DeleteRoutingArea,
   GetRoutingAreaById,
   GetRoutingAreas,
 } from "../controllers/routingAreaController";
@@ -24,6 +25,16 @@ routingAreaRoute.post(
   "/",
   errorHandler(requirePostal),
   errorHandler(CreateRoutingArea)
+);
+// routingAreaRoute.put(
+//   "/:id",
+//   errorHandler(requirePostal),
+//   errorHandler(UpdateRoutingArea)
+// );
+routingAreaRoute.delete(
+  "/:id",
+  errorHandler(requirePostal),
+  errorHandler(DeleteRoutingArea)
 );
 
 export default routingAreaRoute;
