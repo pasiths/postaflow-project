@@ -87,7 +87,7 @@ const MailsPage = () => {
     <main className="container mx-auto mt-4 p-4 min-h-[calc(100vh-4rem)]">
       <div className="flex flex-row items-center justify-between mb-4">
         <h1 className="text-2xl font-bold mb-4">Mail Lists</h1>
-        <div className="w-11 h-11 bg-gray-900 rounded-full flex items-center justify-center mb-4"></div>
+        {/* <div className="w-11 h-11 bg-gray-900 rounded-full flex items-center justify-center mb-4"></div> */}
       </div>
 
       <div className="flex items-center justify-end">
