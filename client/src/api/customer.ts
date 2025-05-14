@@ -1,4 +1,4 @@
-import type { CreateCustomerInput, Customer } from "@/types/customer";
+import type { CustomerForm, Customer } from "@/types/customer";
 import apiClient from ".";
 
 export const getCustomers = async (): Promise<{ customers: Customer[] }> => {
@@ -12,7 +12,7 @@ export const getSearchCustomers = async ({
   query: string;
 }): Promise<{ customers: Customer[] }> => {
   const response = await apiClient.get("/customer", {
-    params: { q: query },
+    params: { q: query, status:"ACTIVE" },
   });
   return response.data as { customers: Customer[] };
 };
@@ -23,7 +23,7 @@ export const createCustomer = async ({
   email,
   contactNum,
   address,
-}: CreateCustomerInput) => {
+}: CustomerForm) => {
   const response = await apiClient.post("/customer", {
     firstName,
     lastName,
@@ -32,4 +32,28 @@ export const createCustomer = async ({
     address,
   });
   return response.data as Customer;
+};
+
+export const updateCustomer = async ({
+  id,
+  firstName,
+  lastName,
+  email,
+  contactNum,
+  address,
+  status
+}: CustomerForm & { id: string }) => {
+  const response = await apiClient.put(`/customer/${id}`, {
+    firstName,
+    lastName,
+    email,
+    contactNum,
+    address,
+    status
+  });
+  return response.data as Customer;
+};
+
+export const deleteCustomer = async (id: string): Promise<void> => {
+  await apiClient.delete(`/customer/${id}`);
 };

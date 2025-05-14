@@ -3,7 +3,7 @@ import { MailSchema } from "../schema/mail";
 import { prisma } from "..";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
-import { MailDirection, MailStatus, MailType } from "@prisma/client";
+import { CustomerStatus, MailDirection, MailStatus, MailType } from "@prisma/client";
 
 export const GetMails = async (req: Request, res: Response) => {
   const { type, status, direction, sortBy, sortOrder } = req.query;
@@ -114,6 +114,7 @@ export const CreateMail = async (req: Request, res: Response) => {
   const sender = await prisma.customer.findUnique({
     where: {
       id: senderId,
+      status: CustomerStatus.ACTIVE,
     },
   });
   if (!sender) {
@@ -126,6 +127,7 @@ export const CreateMail = async (req: Request, res: Response) => {
   const receiver = await prisma.customer.findUnique({
     where: {
       id: receiverId,
+      status:CustomerStatus.ACTIVE,
     },
   });
   if (!receiver) {

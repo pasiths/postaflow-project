@@ -4,18 +4,26 @@ import { prisma } from "..";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { NotFoundException } from "../exceptions/not-found";
+import { CustomerStatus } from "@prisma/client";
 
 export const GetCustomers = async (req: Request, res: Response) => {
-  const { q } = req.query;
-  const searchQuery = typeof q === 'string' ? q : '';
+  const { q,status } = req.query;
+  const searchQuery = typeof q === "string" ? q : "";
 
   const customers = await prisma.customer.findMany({
     where: {
       OR: [
-        { fName: { contains: searchQuery, mode: 'insensitive' } },
-        { lName: { contains: searchQuery, mode: 'insensitive' } },
-        { email: { contains: searchQuery, mode: 'insensitive' } },
+        { fName: { contains: searchQuery, mode: "insensitive" } },
+        { lName: { contains: searchQuery, mode: "insensitive" } },
+        { email: { contains: searchQuery, mode: "insensitive" } },
         { contactNum: { contains: searchQuery } },
+      ],
+      AND: [
+        {
+          status: status
+            ? (status as CustomerStatus)
+            : undefined,
+        },
       ],
     },
   });
@@ -111,7 +119,7 @@ export const UpdateCustomer = async (req: Request, res: Response) => {
 
   CustomerSchema.parse(req.body);
 
-  const { firstName, lastName, email, contactNum, address } = req.body;
+  const { firstName, lastName, email, contactNum, address,status } = req.body;
 
   let customer = await prisma.customer.findUnique({
     where: { id: Number(id) },
@@ -144,6 +152,7 @@ export const UpdateCustomer = async (req: Request, res: Response) => {
       email,
       contactNum,
       address,
+      status
     },
   });
 
@@ -155,3 +164,32 @@ export const UpdateCustomer = async (req: Request, res: Response) => {
 
   res.json({ customer });
 };
+
+
+export const DeleteCustomer = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+ 
+
+  const customer = await prisma.customer.update({
+    where: { id: Number(id) },
+    data: {
+      status: CustomerStatus.INACTIVE,
+    },
+  });
+
+  if (!customer) {
+    throw new NotFoundException(
+      "Customer not found!",
+      ErrorCode.CUSTOMER_NOT_FOUND
+    );
+  }
+
+  console.log(
+    `LOG_BOOK customer= ${customer.fName} deleted by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ message: "Customer deleted successfully!" });
+}

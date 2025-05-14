@@ -4,7 +4,7 @@ import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 import { NotFoundException } from "../exceptions/not-found";
 import { BillSchema } from "../schema/bill";
-import { BillType } from "@prisma/client";
+import { BillType, CustomerStatus } from "@prisma/client";
 
 export const GetBills = async (req: Request, res: Response) => {
   const bills = await prisma.bill.findMany({include: { client: true } });
@@ -30,8 +30,8 @@ export const CreateBill = async (req: Request, res: Response) => {
     clientId,
   } = req.body;
 
-  const customer = await prisma.customer.findUnique({
-    where: { id: Number(clientId) },
+  const customer = await prisma.customer.findFirst({
+    where: { id: Number(clientId) , status: CustomerStatus.ACTIVE},
   });
 
   if (!customer) {

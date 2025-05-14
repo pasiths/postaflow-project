@@ -1,33 +1,51 @@
-import { createCustomer } from "@/api/customer";
+import { createCustomer, updateCustomer } from "@/api/customer";
 import { InputWithLabel } from "../atoms/InputWithLabel";
 import { TextareaWithLabel } from "../atoms/TextareaWithLabel";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import type { Customer } from "@/types/customer";
+import SelectWithLabel from "../atoms/SelectWithLabel";
 
-const CustomerEditor = () => {
+const CustomerEditor = ({ customer }: { customer?: Customer }) => {
   const [loading, setLoading] = useState(false);
 
+  const [id, setId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [contactNum, setContactNum] = useState("");
   const [address, setAddress] = useState("");
+  const [status, setStatus] = useState("");
 
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [contactNumError, setContactNumError] = useState("");
   const [addressError, setAddressError] = useState("");
+  const [statusError, setStatusError] = useState("");
 
-  const handleCreateCustomer = async () => {
+  useEffect(() => {
+    if (customer) {
+      setId(customer.id.toString());
+      setFirstName(customer.fName);
+      setLastName(customer.lName);
+      setEmail(customer.email);
+      setContactNum(customer.contactNum);
+      setAddress(customer.address);
+      setStatus(customer.status);
+    }
+  }, [customer]);
+
+  const handleSubmit = async () => {
     setLoading(true);
     setFirstNameError("");
     setLastNameError("");
     setEmailError("");
     setContactNumError("");
     setAddressError("");
+    setStatusError("");
 
     // Validate inputs
     let isHasError = false;
@@ -68,25 +86,41 @@ const CustomerEditor = () => {
       isHasError = true;
     }
 
+    if (customer && !status) {
+      setStatusError("Status is required");
+      isHasError = true;
+    }
+
     if (isHasError) {
       setLoading(false);
       return;
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError("Invalid email format");
-      isHasError = true;
-    }
+    try {
+      let isSuccess: boolean = false;
+      if (!customer) {
+        isSuccess = await handleCreateCustomer();
+      }
+      if (customer) {
+        isSuccess = await handleUpdateCustomer();
+      }
 
-    // Validate contact number format (only digits and length between 7-15)
-    const contactNumRegex = /^\d{7,15}$/;
-    if (!contactNumRegex.test(contactNum)) {
-      setContactNumError("Contact number must be 7-15 digits");
-      isHasError = true;
+      if (isSuccess) {
+        toast.success(
+          `Customer ${customer ? "updated" : "created"} successfully`
+        );
+        window.location.reload();
+        return null;
+      }
+      toast.error(`Failed to ${customer ? "update" : "create"} customer`);
+    } catch (error) {
+      console.error("Error creating customer:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  const handleCreateCustomer = async (): Promise<boolean> => {
     try {
       await createCustomer({
         firstName,
@@ -95,20 +129,36 @@ const CustomerEditor = () => {
         contactNum,
         address,
       });
-
-      toast.success("Customer created successfully");
-
-      window.location.reload();
+      return true;
     } catch (error) {
       console.error("Error creating customer:", error);
-    } finally {
-      setLoading(false);
+      return false;
+    }
+  };
+
+  const handleUpdateCustomer = async (): Promise<boolean> => {
+    try {
+      await updateCustomer({
+        id,
+        firstName,
+        lastName,
+        email,
+        contactNum,
+        address,
+        status,
+      });
+      return true;
+    } catch (error) {
+      console.error("Error creating customer:", error);
+      return false;
     }
   };
 
   return (
     <div className="">
-      <h1 className="text-base font-bold">Create Customer</h1>
+      <h1 className="text-base font-bold">
+        {customer ? "Update" : "Create"} Customer
+      </h1>
       <Separator className="mb-5" />
       <div className="space-y-2">
         <div className="flex gap-2">
@@ -169,15 +219,41 @@ const CustomerEditor = () => {
           error={addressError}
           required
         />
+        <div className="flex gap-2">
+          {customer && (
+            <SelectWithLabel
+              label="Status"
+              id="status"
+              placeholder={""}
+              items={[
+                {
+                  item: "Active",
+                  value: "ACTIVE",
+                  id: 0,
+                },
+                {
+                  item: "Inactive",
+                  value: "INACTIVE",
+                  id: 1,
+                },
+              ]}
+              onChange={(value) => setStatus(value)}
+              disabled={loading}
+              error={statusError}
+              selectedValue={status}
+            />
+          )}
+          <div className="w-full"></div>
+        </div>
 
         <div className="flex gap-2 items-center justify-end">
           <Button
             variant="default"
             className="w-40 mt-4"
-            onClick={handleCreateCustomer}
+            onClick={handleSubmit}
             disabled={loading}
           >
-            Create Customer
+            {customer ? "Update" : "Create"} Customer
           </Button>
         </div>
       </div>
