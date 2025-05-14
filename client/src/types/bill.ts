@@ -6,8 +6,8 @@ export interface Bill {
   amount: number;
   billType: string;
   accountNumber: string;
-  amountPaid: string;
-  paymentMethod: Date;
+  amountPaid: number;
+  paymentMethod: string;
   clientId: number;
   createdAt: Date;
 }
