@@ -10,10 +10,12 @@ export interface Customer {
   status: string;
 }
 
-export interface CreateCustomerInput {
+export interface CustomerForm {
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;
   contactNum: string;
   address: string;
+  status?: string;
 }

@@ -104,7 +104,7 @@ export const columns: ColumnDef<Customer>[] = [
     cell: ({ row }) => {
       const customer = row.original;
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const [preview, setPreview] = React.useState(true);
+      const [preview, setPreview] = React.useState(false);
 
       return (
         <>
@@ -186,7 +186,7 @@ const CustomerPage = () => {
             >
               ✕
             </button>
-            <CustomerEditor />
+            <CustomerEditor customer={undefined} />
           </div>
         </div>
       )}

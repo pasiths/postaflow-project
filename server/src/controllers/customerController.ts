@@ -119,7 +119,7 @@ export const UpdateCustomer = async (req: Request, res: Response) => {
 
   CustomerSchema.parse(req.body);
 
-  const { firstName, lastName, email, contactNum, address } = req.body;
+  const { firstName, lastName, email, contactNum, address,status } = req.body;
 
   let customer = await prisma.customer.findUnique({
     where: { id: Number(id) },
@@ -152,6 +152,7 @@ export const UpdateCustomer = async (req: Request, res: Response) => {
       email,
       contactNum,
       address,
+      status
     },
   });
 

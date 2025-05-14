@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import type { Customer } from "@/types/customer";
 import { deleteCustomer } from "@/api/customer";
+import CustomerEditor from "./editor";
 
 const CustomerPreview = ({ customer }: { customer: Customer }) => {
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -30,7 +31,7 @@ const CustomerPreview = ({ customer }: { customer: Customer }) => {
             >
               ✕
             </button>
-            {/* <EmployeeEditor employee={employee} /> */}
+            <CustomerEditor customer={customer} />
           </div>
         </div>
       ) : (
