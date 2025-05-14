@@ -11,6 +11,7 @@ import MailsPage from "@/pages/dashbord/mail/MailsPage";
 import CustomerPage from "@/pages/dashbord/customer/CustomersPage";
 import RoutingAreaPage from "@/pages/dashbord/routingArea/routingAreaPage";
 import EmployeesPage from "@/pages/dashbord/employee/EmployeesPage";
+import BillsPage from "@/pages/dashbord/bill/BillsPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/routingareas" element={<RoutingAreaPage />} />
           <Route path="/customers" element={<CustomerPage />} />
           <Route path="/employees" element={<EmployeesPage />} />
+          <Route path="/bills" element={<BillsPage/>} />
           {/* </Route> */}
 
           {/* ADMIN or CASHIER */}

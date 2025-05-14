@@ -7,7 +7,7 @@ import { BillSchema } from "../schema/bill";
 import { BillType } from "@prisma/client";
 
 export const GetBills = async (req: Request, res: Response) => {
-  const bills = await prisma.bill.findMany({});
+  const bills = await prisma.bill.findMany({include: { client: true } });
   if (bills.length === 0) {
     return res.json({ bills: [] });
   }
