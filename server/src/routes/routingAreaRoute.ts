@@ -6,6 +6,7 @@ import {
   DeleteRoutingArea,
   GetRoutingAreaById,
   GetRoutingAreas,
+  UpdateRoutingArea,
 } from "../controllers/routingAreaController";
 
 const routingAreaRoute: Router = Router();
@@ -26,11 +27,11 @@ routingAreaRoute.post(
   errorHandler(requirePostal),
   errorHandler(CreateRoutingArea)
 );
-// routingAreaRoute.put(
-//   "/:id",
-//   errorHandler(requirePostal),
-//   errorHandler(UpdateRoutingArea)
-// );
+routingAreaRoute.put(
+  "/:id",
+  errorHandler(requirePostal),
+  errorHandler(UpdateRoutingArea)
+);
 routingAreaRoute.delete(
   "/:id",
   errorHandler(requirePostal),

@@ -147,6 +147,47 @@ export const CreateRoutingArea = async (req: Request, res: Response) => {
   res.json({ routingArea: routingArea });
 };
 
+export const UpdateRoutingArea = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id || isNaN(Number(id))) {
+    throw new NotFoundException(
+      "Routing Area ID is required!",
+      ErrorCode.BAD_REQUEST
+    );
+  }
+
+  RoutingAreaSchema.parse(req.body);
+
+  const { area, deliverId, status } = req.body;
+
+  let routingArea = await prisma.routingArea.findUnique({
+    where: { id: Number(id) },
+  });
+  if (!routingArea) {
+    throw new NotFoundException(
+      "Routing Area not found!",
+      ErrorCode.ROUTING_AREA_NOT_FOUND
+    );
+  }
+
+  routingArea = await prisma.routingArea.update({
+    where: { id: Number(id) },
+    data: {
+      area,
+      deliverId: Number(deliverId),
+      status,
+    },
+  });
+
+  console.log(
+    `LOG_BOOK routingArea= ${routingArea?.id} updated by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ routingArea: routingArea });
+};
+
 export const DeleteRoutingArea = async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -156,7 +197,7 @@ export const DeleteRoutingArea = async (req: Request, res: Response) => {
       status: Status.INACTIVE,
     },
   });
-  if(!routingArea) {
+  if (!routingArea) {
     throw new NotFoundException(
       "Routing Area not found!",
       ErrorCode.ROUTING_AREA_NOT_FOUND
