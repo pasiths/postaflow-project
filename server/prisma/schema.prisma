@@ -46,6 +46,8 @@ model RoutingArea {
   id   Int    @id @default(autoincrement())
   area String
 
+  status Status @default(ACTIVE)
+
   deliverId Int
   deliver   Employee @relation(fields: [deliverId], references: [id])
 
@@ -79,8 +81,9 @@ model Inventory {
   quantity      Int
   stockStatus   StockStatus
   lastOrderDate DateTime
-
-  Mail Mail[]
+  status        Status      @default(ACTIVE)
+  createdAt     DateTime    @default(now())
+  Mail          Mail[]
 }
 
 enum StockStatus {
@@ -175,4 +178,9 @@ enum PaymentMethod {
   DEBIT_CARD
   BANK_TRANSFER
   OTHER
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
 }
