@@ -155,7 +155,7 @@ const RoutingAreaEditor = ({ routingArea }: { routingArea?: RoutingArea }) => {
       });
       return true;
     } catch (error) {
-      console.error("Error creating routingArea:", error);
+      console.error("Error updating routingArea:", error);
       return false;
     }
   };
