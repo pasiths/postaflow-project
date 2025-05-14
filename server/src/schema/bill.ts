@@ -15,5 +15,5 @@ export const BillSchema = z.object({
   accountNumber: z.string().optional(),
   amountPaid: z.number().nonnegative().optional(),
   paymentMethod: z.enum(["CASH", "CREDIT_CARD", "BANK_TRANSFER", "OTHER"]).optional(),
-  clientId: z.string(),
+  clientId: z.number(),
 });
