@@ -33,3 +33,7 @@ export const createCustomer = async ({
   });
   return response.data as Customer;
 };
+
+export const deleteCustomer = async (id: string): Promise<void> => {
+  await apiClient.delete(`/customer/${id}`);
+};

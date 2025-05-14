@@ -2,6 +2,7 @@ import { Router } from "express";
 import { errorHandler } from "../error-handler";
 import {
   CreateCustomer,
+  DeleteCustomer,
   GetCustomerById,
   GetCustomers,
   UpdateCustomer,
@@ -26,6 +27,11 @@ customerRoute.put(
   "/:id",
   errorHandler(requirePostal),
   errorHandler(UpdateCustomer)
+);
+customerRoute.delete(
+  "/:id",
+  errorHandler(requirePostal),
+  errorHandler(DeleteCustomer)
 );
 
 export default customerRoute;

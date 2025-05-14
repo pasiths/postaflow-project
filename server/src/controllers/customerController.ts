@@ -163,3 +163,32 @@ export const UpdateCustomer = async (req: Request, res: Response) => {
 
   res.json({ customer });
 };
+
+
+export const DeleteCustomer = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+ 
+
+  const customer = await prisma.customer.update({
+    where: { id: Number(id) },
+    data: {
+      status: CustomerStatus.INACTIVE,
+    },
+  });
+
+  if (!customer) {
+    throw new NotFoundException(
+      "Customer not found!",
+      ErrorCode.CUSTOMER_NOT_FOUND
+    );
+  }
+
+  console.log(
+    `LOG_BOOK customer= ${customer.fName} deleted by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ message: "Customer deleted successfully!" });
+}
