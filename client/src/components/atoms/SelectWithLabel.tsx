@@ -12,6 +12,7 @@ interface SelectWithLabelProps {
   id: string;
   placeholder: string;
   error?: string;
+  selectedValue?: string;
   disabled?: boolean;
   items: {
     id: number;
@@ -28,6 +29,7 @@ const SelectWithLabel = ({
   placeholder,
   error,
   items,
+  selectedValue,
   disabled = false,
   required = false,
   onChange,
@@ -37,7 +39,12 @@ const SelectWithLabel = ({
       <Label htmlFor={id} className="text-sm text-muted-foreground">
         {label}
       </Label>
-      <Select disabled={disabled} required={required} onValueChange={onChange}>
+      <Select
+        disabled={disabled}
+        required={required}
+        value={selectedValue} // Set the value here
+        onValueChange={onChange}
+      >
         <SelectTrigger className="w-full">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
