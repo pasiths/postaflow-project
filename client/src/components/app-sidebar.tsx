@@ -1,4 +1,4 @@
-import { Home, Inbox, Map, ShieldUser, Users } from "lucide-react";
+import { Home, Inbox, Map, Receipt, ShieldUser, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -27,6 +27,11 @@ const items = [
     title: "Mails",
     url: "/mails",
     icon: Inbox,
+  },
+  {
+    title: "Bills",
+    url: "/bills",
+    icon: Receipt,
   },
   {
     title: "Routing Areas",
