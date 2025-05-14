@@ -70,18 +70,18 @@ const BillPreview = ({ bill }: { bill: Bill }) => {
               <span className="text-foreground">{bill.accountNumber}</span>
             </p>
             <p className="w-full text-sm text-muted-foreground font-semibold">
-              Amount: <span className="text-foreground">{bill.amount}</span>
+              Amount(LKR): <span className="text-foreground">{bill.amount}</span>
             </p>
           </div>
           <div className="flex gap-2">
             <p className="w-full text-sm text-muted-foreground font-semibold">
-              Amount Paid:{" "}
+              Amount Paid(LKR):{" "}
               <span className="text-foreground">{bill.amountPaid}</span>
             </p>
             <p className="w-full text-sm text-muted-foreground font-semibold">
               Status:{" "}
               <span className="text-foreground">
-                {bill.amountPaid === bill.amount ? "Paid" : "Unpaid"}
+                {bill.amountPaid >= bill.amount ? "Paid" : "Unpaid"}
               </span>
             </p>
           </div>

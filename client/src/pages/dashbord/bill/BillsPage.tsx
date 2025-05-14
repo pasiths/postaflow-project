@@ -79,7 +79,7 @@ export const columns: ColumnDef<Bill>[] = [
           className="flex items-center gap-1"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Amount
+          Amount(LKR)
           <ArrowUpDown size={16} />
         </span>
       );
@@ -93,7 +93,7 @@ export const columns: ColumnDef<Bill>[] = [
           className="flex items-center gap-1"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Amount Paid
+          Amount Paid(LKR)
           <ArrowUpDown size={16} />
         </span>
       );
