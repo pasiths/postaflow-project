@@ -4,8 +4,19 @@ export interface Employee {
   fName: string;
   lName: string;
   email: string;
-  phoneNu: string;
+  phoneNum: string;
   address: string;
   role: string;
-  statu: string;
+  status: string;
+}
+export interface EmployeeForm {
+  id:string
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  phoneNum: string;
+  address: string;
+  role: string;
+  status: string;
 }
