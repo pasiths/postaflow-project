@@ -6,13 +6,29 @@ import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
 
 export const getEmployees = async (req: Request, res: Response) => {
-  const { role, status } = req.query;
+  const { q, status, role } = req.query;
+  const searchQuery = typeof q === "string" ? q : "";
+
   const employees = await prisma.employee.findMany({
     where: {
-      AND: [
-        role ? { role: { equals: role as UserRole } } : {},
-        status ? { status: { equals: status as UserStatus } } : {},
+      OR: [
+        {
+          id: {
+            equals: isNaN(Number(searchQuery))
+              ? undefined
+              : Number(searchQuery),
+          },
+        },
+        { fName: { contains: searchQuery, mode: "insensitive" } },
+        { lName: { contains: searchQuery, mode: "insensitive" } },
+        { username: { contains: searchQuery, mode: "insensitive" } },
+        { email: { contains: searchQuery, mode: "insensitive" } },
+        { phoneNum: { contains: searchQuery, mode: "insensitive" } },
       ],
+      AND: [
+        { status: status ? (status as UserStatus) : undefined },
+        { role: role ? (role as UserRole) : undefined },
+      ]
     },
     select: {
       id: true,

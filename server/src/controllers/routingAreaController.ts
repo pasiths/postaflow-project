@@ -3,25 +3,37 @@ import { RoutingAreaSchema } from "../schema/routingArea";
 import { prisma } from "..";
 import { NotFoundException } from "../exceptions/not-found";
 import { ErrorCode } from "../exceptions/root";
-import { UserRole, UserStatus } from "@prisma/client";
+import { Status, UserRole, UserStatus } from "@prisma/client";
 
 export const GetRoutingAreas = async (req: Request, res: Response) => {
-  const { area, deliverName } = req.query;
+  const { q, status } = req.query;
+  const searchQuery = typeof q === "string" ? q : "";
 
   const routingAreas = await prisma.routingArea.findMany({
     where: {
+      OR: [
+        { area: { contains: searchQuery, mode: "insensitive" } },
+        {
+          deliver: {
+            fName: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
+            lName: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
+            username: {
+              contains: searchQuery,
+              mode: "insensitive",
+            },
+          },
+        },
+      ],
       AND: [
-        area ? { area: { contains: area as string, mode: "insensitive" } } : {},
-        deliverName
-          ? {
-              deliver: {
-                fName: {
-                  contains: deliverName as string,
-                  mode: "insensitive",
-                },
-              },
-            }
-          : {},
+        {
+          status: status ? (status as Status) : undefined,
+        },
       ],
     },
     include: {
@@ -45,7 +57,7 @@ export const GetRoutingAreas = async (req: Request, res: Response) => {
   }
 
   console.log(
-    `LOG_BOOK routingArea={area} ${deliverName} searched by ${
+    `LOG_BOOK routingArea=${searchQuery} ${status} searched by ${
       req.user?.username
     } at ${new Date().toLocaleString()}`
   );
@@ -133,4 +145,68 @@ export const CreateRoutingArea = async (req: Request, res: Response) => {
     } at ${new Date().toLocaleString()}`
   );
   res.json({ routingArea: routingArea });
+};
+
+export const UpdateRoutingArea = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id || isNaN(Number(id))) {
+    throw new NotFoundException(
+      "Routing Area ID is required!",
+      ErrorCode.BAD_REQUEST
+    );
+  }
+
+  RoutingAreaSchema.parse(req.body);
+
+  const { area, deliverId, status } = req.body;
+
+  let routingArea = await prisma.routingArea.findUnique({
+    where: { id: Number(id) },
+  });
+  if (!routingArea) {
+    throw new NotFoundException(
+      "Routing Area not found!",
+      ErrorCode.ROUTING_AREA_NOT_FOUND
+    );
+  }
+
+  routingArea = await prisma.routingArea.update({
+    where: { id: Number(id) },
+    data: {
+      area,
+      deliverId: Number(deliverId),
+      status,
+    },
+  });
+
+  console.log(
+    `LOG_BOOK routingArea= ${routingArea?.id} updated by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ routingArea: routingArea });
+};
+
+export const DeleteRoutingArea = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const routingArea = await prisma.routingArea.update({
+    where: { id: Number(id) },
+    data: {
+      status: Status.INACTIVE,
+    },
+  });
+  if (!routingArea) {
+    throw new NotFoundException(
+      "Routing Area not found!",
+      ErrorCode.ROUTING_AREA_NOT_FOUND
+    );
+  }
+  console.log(
+    `LOG_BOOK routing area= ${routingArea?.id} deleted by ${
+      req.user?.username
+    } at ${new Date().toLocaleString()}`
+  );
+  res.json({ message: "Routing area deleted successfully!" });
 };

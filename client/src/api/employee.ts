@@ -17,6 +17,19 @@ export const getEmployees = async ({
   return response.data as { employees: Employee[] };
 };
 
+export const getSearchEmployee = async ({
+  query,
+  role,
+}: {
+  query: string;
+  role?: string;
+}): Promise<{ employees: Employee[] }> => {
+  const response = await apiClient.get("/employee", {
+    params: { q: query, status: "ACTIVE", role },
+  });
+  return response.data as { employees: Employee[] };
+};
+
 export const updateEmployee = async ({
   id,
   firstName,
