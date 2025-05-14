@@ -359,7 +359,7 @@ const BillEditor = () => {
           </div>
           <div className="flex gap-2">
             <InputWithLabel
-              label="Amount:"
+              label="Amount(LKR):"
               id="amount"
               placeholder=""
               type="number"
@@ -370,7 +370,7 @@ const BillEditor = () => {
               required
             />
             <InputWithLabel
-              label="Paid Amount:"
+              label="Paid Amount(LKR):"
               id="amountPaid"
               placeholder=""
               type="number"
