@@ -79,7 +79,7 @@ export const columns: ColumnDef<Mail>[] = [
           className="flex items-center gap-1"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Reciver Address
+          Receiver Address
           <ArrowUpDown size={16} />
         </span>
       );
