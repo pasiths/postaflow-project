@@ -12,39 +12,35 @@ import EmployeesPage from "@/pages/dashbord/employee/EmployeesPage";
 import BillsPage from "@/pages/dashbord/bill/BillsPage";
 import PrivateRoute, { AuthenticatedRoute } from "@/guards/PrivateRoute";
 import DeliverPage from "@/pages/deliver/page";
-import Cookies from "js-cookie";
 
 const AppRoutes: React.FC = () => {
-  const token = Cookies.get("token");
-
   return (
     <Routes>
-      {!token && <Route index element={<SignInPage />} />}
-      {!token && <Route path="/signin" element={<SignInPage />} />}
-      {!token && <Route path="/signup" element={<SignUpPage />} />}
+      <Route index element={<SignInPage />} />
+      <Route path="/signin" element={<SignInPage />} />
+      <Route path="/signup" element={<SignUpPage />} />
 
       {/* Private Routes */}
 
-      
-        <Route element={<AuthenticatedRoute />}>
-          <Route element={<PrivateRoute />}>
-            <Route element={<ProtectedLayout />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/dashboard/mails" element={<MailsPage />} />
-              <Route
-                path="/dashboard/routingareas"
-                element={<RoutingAreaPage />}
-              />
-              <Route path="/dashboard/customers" element={<CustomerPage />} />
-              <Route path="/dashboard/employees" element={<EmployeesPage />} />
-              <Route path="/dashboard/bills" element={<BillsPage />} />
+      <Route element={<AuthenticatedRoute />}>
+        <Route element={<PrivateRoute />}>
+          <Route element={<ProtectedLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/dashboard/mails" element={<MailsPage />} />
+            <Route
+              path="/dashboard/routingareas"
+              element={<RoutingAreaPage />}
+            />
+            <Route path="/dashboard/customers" element={<CustomerPage />} />
+            <Route path="/dashboard/employees" element={<EmployeesPage />} />
+            <Route path="/dashboard/bills" element={<BillsPage />} />
 
-              <Route index element={<DashboardPage />} />
-            </Route>
+            <Route index element={<DashboardPage />} />
           </Route>
-          <Route path="/deliverer" element={<DeliverPage />} />
         </Route>
-    
+        <Route path="/deliverer" element={<DeliverPage />} />
+      </Route>
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
