@@ -37,7 +37,7 @@ const MailPreview = ({ mail }: { mail: Mail }) => {
   const [receiverPhoneNum, setReceiverPhoneNum] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
 
-  const [senderFistName, setSenderFirstName] = useState("");
+  const [senderFirstName, setSenderFirstName] = useState("");
   const [senderLastName, setSenderLastName] = useState("");
   const [senderEmail, setSenderEmail] = useState("");
   const [senderPhoneNum, setSenderPhoneNum] = useState("");
