@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppSelector } from "@/app/hooks";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 
 export const ProtectedLayout: React.FC = () => {
@@ -14,7 +14,7 @@ export const ProtectedLayout: React.FC = () => {
       <div className="flex w-full">
         <AppSidebar />
         <main className="flex-1 p-4 w-full min-h-screen bg-gray-100">
-          {/* <SidebarTrigger /> */}
+          <SidebarTrigger />
           <Outlet />
         </main>
       </div>
