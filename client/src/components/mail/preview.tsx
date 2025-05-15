@@ -217,7 +217,7 @@ const MailPreview = ({ mail }: { mail: Mail }) => {
             </div>
             <Separator className="my-2 px-4" />
             <Input
-              placeholder="Search rouitng area..."
+              placeholder="Search routing area..."
               value={routerSearch}
               onChange={(e) => setRouterSearch(e.target.value)}
               onKeyUp={handleSearchRoutingArea}
