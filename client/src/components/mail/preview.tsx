@@ -25,7 +25,7 @@ const MailPreview = ({ mail }: { mail: Mail }) => {
   const [status, setStatus] = useState("");
 
   const [routerId, setRouterId] = useState("");
-  const [deliverFistName, setDeliverFirstName] = useState("");
+  const [deliverFirstName, setDeliverFirstName] = useState("");
   const [deliverLastName, setDeliverLastName] = useState("");
   const [deliverEmail, setDeliverEmail] = useState("");
   const [deliverPhoneNum, setDeliverPhoneNum] = useState("");
