@@ -257,7 +257,7 @@ const MailPreview = ({ mail }: { mail: Mail }) => {
               <p className="w-full text-sm text-muted-foreground font-semibold">
                 Deliver First Name:{" "}
                 <span className="text-foreground">
-                  {deliverFistName || "-"}
+                  {deliverFirstName || "-"}
                 </span>
               </p>
             </div>
@@ -300,7 +300,7 @@ const MailPreview = ({ mail }: { mail: Mail }) => {
             <div className="flex gap-2">
               <p className="w-full text-sm text-muted-foreground font-semibold">
                 Receiver First Name:{" "}
-                <span className="text-foreground">{receiverFistName}</span>
+                <span className="text-foreground">{receiverFirstName}</span>
               </p>
               <p className="w-full text-sm text-muted-foreground font-semibold">
                 Receiver Last Name:{" "}
@@ -327,7 +327,7 @@ const MailPreview = ({ mail }: { mail: Mail }) => {
             <div className="flex gap-2">
               <p className="w-full text-sm text-muted-foreground font-semibold">
                 Sender First Name:{" "}
-                <span className="text-foreground">{senderFistName}</span>
+                <span className="text-foreground">{senderFirstName}</span>
               </p>
               <p className="w-full text-sm text-muted-foreground font-semibold">
                 Sender Last Name:{" "}
