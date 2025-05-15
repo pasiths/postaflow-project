@@ -4,9 +4,11 @@ import { InputWithLabel } from "../atoms/InputWithLabel";
 import { Button } from "../ui/button";
 import { signinApi } from "@/api/auth";
 import { signin } from "@/features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const SignInForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
@@ -33,10 +35,10 @@ const SignInForm = () => {
       const res = (await signinApi(username, password)) as LoginResponse;
       dispatch(signin(res.user));
       if (res.user.role === "POSTALCLERK") {
-        console.log("this logged postal clerk", res);
+        navigate("/dashboard");
       }
       if (res.user.role === "MAIL_DELIVERER") {
-        console.log("this logged mail deliverer");
+        navigate("/deliverer");
       }
     } catch (error) {
       console.log(error);

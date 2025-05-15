@@ -1,45 +1,52 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import SignInPage from "@/pages/auth/SignIn";
 import SignUpPage from "@/pages/auth/SignUp";
 
 import { ProtectedLayout } from "@/layout/ProtectedLayout";
-// import PrivateRoute from '@/guards/PrivateRoute';
-// import AuthenticatedRoute from '@/guards/AuthenticatedRoute';
 import DashboardPage from "@/pages/dashbord/Dashboard";
 import MailsPage from "@/pages/dashbord/mail/MailsPage";
 import CustomerPage from "@/pages/dashbord/customer/CustomersPage";
 import RoutingAreaPage from "@/pages/dashbord/routingArea/routingAreaPage";
 import EmployeesPage from "@/pages/dashbord/employee/EmployeesPage";
 import BillsPage from "@/pages/dashbord/bill/BillsPage";
+import PrivateRoute, { AuthenticatedRoute } from "@/guards/PrivateRoute";
+import DeliverPage from "@/pages/deliver/page";
+import Cookies from "js-cookie";
 
 const AppRoutes: React.FC = () => {
+  const token = Cookies.get("token");
+
   return (
-    <Router>
-      <Routes>
-        {/* Public routes (no layout) */}
-        <Route path="/login" element={<SignInPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+    <Routes>
+      {!token && <Route index element={<SignInPage />} />}
+      {!token && <Route path="/signin" element={<SignInPage />} />}
+      {!token && <Route path="/signup" element={<SignUpPage />} />}
 
-        {/* Protected layout */}
-        <Route element={<ProtectedLayout />}>
-          {/* ADMIN only */}
-          {/* <Route element={<PrivateRoute />}> */}
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/mails" element={<MailsPage />} />
-          <Route path="/routingareas" element={<RoutingAreaPage />} />
-          <Route path="/customers" element={<CustomerPage />} />
-          <Route path="/employees" element={<EmployeesPage />} />
-          <Route path="/bills" element={<BillsPage/>} />
-          {/* </Route> */}
+      {/* Private Routes */}
 
-          {/* ADMIN or CASHIER */}
-          {/* <Route element={<AuthenticatedRoute />}>
-            <Route path="/billing" element={<BillingPage />} />
-          </Route> */}
+      
+        <Route element={<AuthenticatedRoute />}>
+          <Route element={<PrivateRoute />}>
+            <Route element={<ProtectedLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/dashboard/mails" element={<MailsPage />} />
+              <Route
+                path="/dashboard/routingareas"
+                element={<RoutingAreaPage />}
+              />
+              <Route path="/dashboard/customers" element={<CustomerPage />} />
+              <Route path="/dashboard/employees" element={<EmployeesPage />} />
+              <Route path="/dashboard/bills" element={<BillsPage />} />
+
+              <Route index element={<DashboardPage />} />
+            </Route>
+          </Route>
+          <Route path="/deliverer" element={<DeliverPage />} />
         </Route>
-      </Routes>
-    </Router>
+    
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 };
 
