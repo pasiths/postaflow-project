@@ -25,7 +25,7 @@ const AppRoutes: React.FC = () => {
       <Route element={<AuthenticatedRoute />}>
         <Route element={<PrivateRoute />}>
           <Route element={<ProtectedLayout />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
+            {/* <Route path="/dashboard" element={<DashboardPage />} /> */}
             <Route path="/dashboard/mails" element={<MailsPage />} />
             <Route
               path="/dashboard/routingareas"
@@ -34,6 +34,11 @@ const AppRoutes: React.FC = () => {
             <Route path="/dashboard/customers" element={<CustomerPage />} />
             <Route path="/dashboard/employees" element={<EmployeesPage />} />
             <Route path="/dashboard/bills" element={<BillsPage />} />
+
+            <Route
+              path="/dashboard"
+              element={<Navigate to="/dashboard/mails" replace />}
+            />
 
             <Route index element={<DashboardPage />} />
           </Route>

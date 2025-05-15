@@ -1,4 +1,4 @@
-import { Home, Inbox, Map, Receipt, ShieldUser, Users } from "lucide-react";
+import { Inbox, Map, Receipt, ShieldUser, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -22,11 +22,11 @@ import { signout } from "@/features/user/userSlice";
 
 // Menu items.
 const items = [
-  {
-    title: "Home",
-    url: "/dashboard",
-    icon: Home,
-  },
+  // {
+  //   title: "Home",
+  //   url: "/dashboard",
+  //   icon: Home,
+  // },
   {
     title: "Mails",
     url: "/dashboard/mails",
