@@ -3,7 +3,12 @@ import { MailSchema } from "../schema/mail";
 import { prisma } from "..";
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
-import { CustomerStatus, MailDirection, MailStatus, MailType } from "@prisma/client";
+import {
+  CustomerStatus,
+  MailDirection,
+  MailStatus,
+  MailType,
+} from "@prisma/client";
 
 export const GetMails = async (req: Request, res: Response) => {
   const { type, status, direction, sortBy, sortOrder } = req.query;
@@ -127,7 +132,7 @@ export const CreateMail = async (req: Request, res: Response) => {
   const receiver = await prisma.customer.findUnique({
     where: {
       id: receiverId,
-      status:CustomerStatus.ACTIVE,
+      status: CustomerStatus.ACTIVE,
     },
   });
   if (!receiver) {
@@ -240,4 +245,40 @@ export const UpdateMail = async (req: Request, res: Response) => {
   );
 
   res.json({ mail: mail });
+};
+
+export const DeleteMail = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(Number(id))) {
+    throw new BadRequestException(
+      "Mail ID is required!",
+      ErrorCode.BAD_REQUEST
+    );
+  }
+
+  let mail = await prisma.mail.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!mail) {
+    throw new BadRequestException("Mail not found!", ErrorCode.MAIL_NOT_FOUND);
+  }
+
+  mail = await prisma.mail.update({
+    where: { id: Number(id) },
+    data: { status: MailStatus.CANCELLED },
+  });
+
+  if (!mail) {
+    throw new BadRequestException("Mail not found!", ErrorCode.MAIL_NOT_FOUND);
+  }
+
+  console.log(
+    `LOG_BOOK ${req.user?.username} deleted mail with ID ${
+      mail.id
+    } at ${new Date().toLocaleString()}`
+  );
+
+  res.json({ message: "Mail deleted successfully" });
 };
