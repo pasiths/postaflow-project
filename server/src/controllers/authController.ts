@@ -112,3 +112,8 @@ export const SignIn = async (req: Request, res: Response) => {
   );
   res.status(200).json({ user: rest });
 };
+
+export const SignOut = async (req: Request, res: Response) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfully!" });
+}

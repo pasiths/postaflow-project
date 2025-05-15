@@ -29,3 +29,8 @@ export const signinApi = async (username: string, password: string) => {
   const response = await apiClient.post(`/auth/signin`, { username, password });
   return response.data;
 };
+
+export const signoutApi = async () => {
+  const response = await apiClient.post(`/auth/signout`);
+  return response.data;
+};
