@@ -25,6 +25,10 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: true,
+      open:false,
+      fs:{
+        strict:false,
+      }
     },
   };
 });

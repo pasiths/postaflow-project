@@ -17,7 +17,7 @@ const generateToken = (data: UserPayload, res: Response): string => {
   });
 
   res.cookie("token", token, {
-    httpOnly: true,
+    httpOnly: false,
     secure: process.env.NODE_ENV !== "development",
     maxAge: 1 * 24 * 60 * 60 * 1000,
     sameSite: "strict",

@@ -20,32 +20,32 @@ import { LogOut } from "lucide-react"; // Assuming LogOut is from lucide-react
 const items = [
   {
     title: "Home",
-    url: "/",
+    url: "/dashboard",
     icon: Home,
   },
   {
     title: "Mails",
-    url: "/mails",
+    url: "/dashboard/mails",
     icon: Inbox,
   },
   {
     title: "Bills",
-    url: "/bills",
+    url: "/dashboard/bills",
     icon: Receipt,
   },
   {
     title: "Routing Areas",
-    url: "/routingareas",
+    url: "/dashboard/routingareas",
     icon: Map,
   },
   {
     title: "Customers",
-    url: "/customers",
+    url: "/dashboard/customers",
     icon: Users,
   },
   {
     title: "Employees",
-    url: "/employees",
+    url: "/dashboard/employees",
     icon: ShieldUser,
   },
 ];
