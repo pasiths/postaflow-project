@@ -20,3 +20,25 @@ export const createMail = async ({
   });
   return response.data as Mail;
 };
+
+export const assignMialToDelivery = async (
+  mailId: number,
+  routerId: string
+) => {
+  const response = await apiClient.put(`/mail/${mailId}/assign`, {
+    routingAreaId:routerId,
+  });
+
+  return response.data as Mail;
+};
+
+export const updateStatus = async (mailId: number, status: string) => {
+  const response = await apiClient.put(`/mail/${mailId}/status`, {
+    status,
+  });
+  return response.data as Mail;
+};
+
+export const deleteMail = async (mailId: number) => {
+  await apiClient.delete(`/mail/${mailId}`);
+};
