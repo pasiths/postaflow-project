@@ -12,10 +12,8 @@ import {
 
 export const GetMails = async (req: Request, res: Response) => {
   const { type, status, direction, sortBy, sortOrder } = req.query;
-  const employeeId = Number(req.user?.id);
   const mails = await prisma.mail.findMany({
     where: {
-      employeeId,
       AND: [
         type ? { type: { equals: type as MailType } } : {},
         status ? { status: { equals: status as MailStatus } } : {},

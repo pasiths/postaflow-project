@@ -1,13 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const useFetch = <T>(
   fetchFunction: () => Promise<T>
 ): {
   data: T | null;
   loading: boolean;
+  refetch: () => void;
 } => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [trigger, setTrigger] = useState<number>(0); // used to trigger refetch
+
+  const refetch = useCallback(() => {
+    setTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,9 +29,9 @@ const useFetch = <T>(
       }
     };
     fetchData();
-  }, [fetchFunction]);
+  }, [fetchFunction, trigger]);
 
-  return { data, loading };
+  return { data, loading, refetch };
 };
 
 export default useFetch;
