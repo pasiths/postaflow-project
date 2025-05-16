@@ -133,7 +133,7 @@ const MailPreview = ({ mail }: { mail: Mail }) => {
 
   const handleSearchRoutingArea = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delayDebounce = setTimeout(async () => {
+    setTimeout(async () => {
       if (routerSearch.trim() === "") {
         setRouterResults([]);
         return;

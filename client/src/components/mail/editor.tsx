@@ -54,7 +54,7 @@ const MailEditor = () => {
 
   const handleSearchSender = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delayDebounce = setTimeout(async () => {
+    setTimeout(async () => {
       if (senderSearch.trim() === "") {
         setSenderResults([]);
         return;
@@ -77,7 +77,7 @@ const MailEditor = () => {
 
   const handleSearchReceiver = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delayDebounce = setTimeout(async () => {
+    setTimeout(async () => {
       if (receiverSearch.trim() === "") {
         setReceiverResults([]);
         return;
