@@ -45,7 +45,7 @@ const BillEditor = () => {
 
   const handleSearchSender = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delayDebounce = setTimeout(async () => {
+    setTimeout(async () => {
       if (clientSearch.trim() === "") {
         setClientResults([]);
         return;

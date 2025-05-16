@@ -162,7 +162,7 @@ const RoutingAreaEditor = ({ routingArea }: { routingArea?: RoutingArea }) => {
 
   const handleSearchDeliver = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delayDebounce = setTimeout(async () => {
+    setTimeout(async () => {
       if (deliverSearch.trim() === "") {
         setdeliverResults([]);
         return;
